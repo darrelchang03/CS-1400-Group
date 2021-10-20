@@ -21,6 +21,13 @@ public class VirusSimulation {
 			numIdv = scnr.nextInt();
 		} while (numIdv % (Math.sqrt(numIdv)) != 0);
 		
+	// user input validation for beta (recovery rate)
+		float beta;
+		do {
+			System.out.println("Please input the recovery rate. It should be between 0 and 1.");
+			beta = scnr.nextFloat();
+		} while((beta>=0) && (beta<=1));
+		
 		while (userInput>counter) {
 			createdString = createdString + "x ";
 			++counter;
