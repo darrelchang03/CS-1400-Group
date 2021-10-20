@@ -28,6 +28,13 @@ public class VirusSimulation {
 			beta = scnr.nextFloat();
 		} while(beta<0 || beta>1);
 		
+	// user input validation for numSteps (number of steps)
+		int numSteps;
+		do {
+			System.out.println("Please input the number of steps for this simulation. It should be greater than 0.");
+			numSteps = scnr.nextInt();
+		} while(numSteps<=0);
+		
 		while (userInput>counter) {
 			createdString = createdString + "x ";
 			++counter;
