@@ -18,7 +18,7 @@ public class VirusSimulation {
 		int numIdv;
 		do {
 			System.out.println("Please input a number of individuals. It should be a perfect square value.");
-			numIdv = input.nextInt();
+			numIdv = scnr.nextInt();
 		} while (numIdv % (Math.sqrt(numIdv)) != 0);
 
 	}
