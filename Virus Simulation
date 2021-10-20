@@ -14,6 +14,12 @@ public class VirusSimulation {
 			alpha = scnr.nextFloat();
 		} while (alpha>.25);
 		
+		//user input validation for numIdv (number of individuals)
+		int numIdv;
+		do {
+			System.out.println("Please input a number of individuals. It should be a perfect square value.");
+			numIdv = input.nextInt();
+		} while (numIdv % (Math.sqrt(numIdv)) != 0);
 
 	}
 
