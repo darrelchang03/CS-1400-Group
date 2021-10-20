@@ -14,19 +14,19 @@ public class VirusSimulation {
 			alpha = scnr.nextFloat();
 		} while (alpha>.25);
 		
-	// user input validation for numIdv (number of individuals)
-		int numIdv;
-		do {
-			System.out.println("Please input a number of individuals. It should be a perfect square value.");
-			numIdv = scnr.nextInt();
-		} while (numIdv % (Math.sqrt(numIdv)) != 0);
-		
 	// user input validation for beta (recovery rate)
 		float beta;
 		do {
 			System.out.println("Please input the recovery rate. It should be between 0 and 1.");
 			beta = scnr.nextFloat();
 		} while(beta<0 || beta>1);
+		
+	// user input validation for numIdv (number of individuals)
+		int numIdv;
+		do {
+			System.out.println("Please input a number of individuals. It should be a perfect square value.");
+			numIdv = scnr.nextInt();
+		} while (numIdv % (Math.sqrt(numIdv)) != 0);
 		
 	// user input validation for numSteps (number of steps)
 		int numSteps;
