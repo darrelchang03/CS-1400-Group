@@ -1,8 +1,18 @@
 package groupProjects;
 
+import java.util.*;
+
 public class VirusSimulation {
 
 	public static void main(String[] args) {
+		Scanner scnr = new Scanner(System.in);
+		
+		// user input validation for alpha (infection rate) 
+		float alpha;
+		do{
+			System.out.println("Enter the rate of infection alpha (alpha <= .25): ");
+			alpha = scnr.nextFloat();
+		} while (alpha>.25);
 		
 
 	}
