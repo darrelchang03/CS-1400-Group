@@ -20,6 +20,17 @@ public class VirusSimulation {
 			System.out.println("Please input a number of individuals. It should be a perfect square value.");
 			numIdv = scnr.nextInt();
 		} while (numIdv % (Math.sqrt(numIdv)) != 0);
+		
+		while (userInput>counter) {
+			createdString = createdString + "x ";
+			++counter;
+		}
+		
+		for (int columnCount = 0; createdString.length()-1>=columnCount; ++columnCount ) {
+			System.out.print(createdString.charAt(columnCount));
+			
+			
+		}
 
 	}
 
