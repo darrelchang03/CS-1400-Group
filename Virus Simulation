@@ -1,6 +1,7 @@
 package groupProjects;
 
 import java.util.*;
+import java.io.*;
 
 public class VirusSimulation {
 
