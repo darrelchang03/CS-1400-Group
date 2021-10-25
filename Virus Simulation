@@ -13,7 +13,7 @@ public class VirusSimulation {
 		do{
 			System.out.println("Enter the rate of infection alpha (alpha <= .25): ");
 			alpha = scnr.nextFloat();
-		} while (alpha>.25);
+		} while (alpha>.25 || alpha < 0);
 		
 	// user input validation for beta (recovery rate)
 		float beta;
@@ -27,7 +27,7 @@ public class VirusSimulation {
 		do {
 			System.out.println("Please input a number of individuals. It should be a perfect square value.");
 			numIdv = scnr.nextInt();
-		} while (numIdv % (Math.sqrt(numIdv)) != 0);
+		} while (numIdv % (Math.sqrt(numIdv)) != 0 || numIdv < 4);
 		
 	// user input validation for numSteps (number of steps)
 		int numSteps;
@@ -36,14 +36,11 @@ public class VirusSimulation {
 			numSteps = scnr.nextInt();
 		} while(numSteps<=0);
 		
-		while (userInput>counter) {
-			createdString = createdString + "x ";
-			++counter;
-		}
-		
-		for (int columnCount = 0; createdString.length()-1>=columnCount; ++columnCount ) {
-			System.out.print(createdString.charAt(columnCount));
-		}
+		int firstInfected;
+		do {
+			System.out.println("Please input the first person that is infected.");
+			firstInfected = scne.nextInt();
+		} while(firstInfected < 0 || firstInfected > numIdv);
 		
 		********************************************************************************************************************************
 		Ethan's Code - when u guys can u should take a look at my code to understand how it works and to know where to add ur guys parts
@@ -82,113 +79,115 @@ public class VirusSimulation {
 		
 		StringBuilder outputString = new StringBuilder(createdString);//need this syntax to change individual characters of string
 		int currentRowNum = 1;//declare row number
-		for (int stringIndex = 1; stringIndex<=numIndiv; ++stringIndex) {//iterate through entire string char by char
-			//check is user is already recovered
-			if (outputString.charAt(stringIndex-1)=='R') {
-				continue;
-			}
-			//check if top left corner piece
-			if (stringIndex==1) {
-				//put random num generator and if statements to check alpha
-				outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
-			}
-			//check if top right corner piece
-			else if (stringIndex==numRows) {
-				//put random num generator and if statements to check alpha
-				outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
-			}
-			//check if bottom left corner piece
-			else if (stringIndex==numIndiv-numRows+1) {
-				//put random num generator and if statements to check alpha
-				outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
-			}
-			//check if bottom right corner piece
-			else if (stringIndex==numIndiv) {
-				//put random num generator and if statements to check alpha
-				outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
-			}
-			//check if right edge piece
-			else if (stringIndex>numRows && stringIndex!=numIndiv && stringIndex%numRows == 0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
-				//put random num generator and if statements to check alpha
-				outputString.setCharAt(stringIndex-1,'E'); //change corner people status 
-			}
-			//check if left edge piece
-			else if (currentRowNum>1 && stringIndex==(currentRowNum-1)*(numRows)+1 && stringIndex!=numIndiv-numRows+1 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
-				//put random num generator and if statements to check alpha
-				outputString.setCharAt(stringIndex-1,'E'); //change left edge people status 
-			}
-			//check for top edge pieces
-			else if (stringIndex < numRows && stringIndex>0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
-				//put random num generator and if statements to check alpha
-				outputString.setCharAt(stringIndex-1,'E');//change top edge peoples status
-			}
-			//check if bottom edge piece
-			else if (currentRowNum == numRows && stringIndex>((currentRowNum-1)*(numRows)+1) && stringIndex<numIndiv && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
-				//put random num generator and if statements to check alpha
-				outputString.setCharAt(stringIndex-1,'E'); //change bottom edge people status
-			}
-			//all inside people
-			else {
-				//put random num generator and if statements to check alpha
-				outputString.setCharAt(stringIndex-1,'I'); //change inside people status
-			}
-			//increment currentRowNum 
-			if (stringIndex%numRows==0 && stringIndex > 0 && stringIndex<numIndiv) {
-		        ++currentRowNum;
-				/*System.out.print(stringIndex + " ");
-				System.out.println(currentRowNum);*/
-			}
-		}
-		
-		//format outputString and print
-		try {
-			FileWriter fWriter = new FileWriter("virussim.txt", true);
-			PrintWriter pWriter = new PrintWriter(fWriter);
-			int infecNum = 0;
-			int recovNum = 0;
-			int susNum = 0;
-			int gcd = 0;
-			for (int i= 1;outputString.length()>=i;++i) {
-				System.out.print(outputString.charAt(i-1));
-				pWriter.print(outputString.charAt(i-1));
-				if (i%numRows == 0 && i>0) {
-					System.out.println("");
-					pWriter.println("");
+		for(int i = 0; i < numSteps; i++){
+			for (int stringIndex = 1; stringIndex<=numIndiv; ++stringIndex) {//iterate through entire string char by char
+				//check is user is already recovered
+				if (outputString.charAt(stringIndex-1)=='R') {
+					continue;
+				}
+				//check if top left corner piece
+				if (stringIndex==1) {
+					//put random num generator and if statements to check alpha
+					outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
+				}
+				//check if top right corner piece
+				else if (stringIndex==numRows) {
+					//put random num generator and if statements to check alpha
+					outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
+				}
+				//check if bottom left corner piece
+				else if (stringIndex==numIndiv-numRows+1) {
+					//put random num generator and if statements to check alpha
+					outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
+				}
+				//check if bottom right corner piece
+				else if (stringIndex==numIndiv) {
+					//put random num generator and if statements to check alpha
+					outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
+				}
+				//check if right edge piece
+				else if (stringIndex>numRows && stringIndex!=numIndiv && stringIndex%numRows == 0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
+					//put random num generator and if statements to check alpha
+					outputString.setCharAt(stringIndex-1,'E'); //change corner people status 
+				}
+				//check if left edge piece
+				else if (currentRowNum>1 && stringIndex==(currentRowNum-1)*(numRows)+1 && stringIndex!=numIndiv-numRows+1 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
+					//put random num generator and if statements to check alpha
+					outputString.setCharAt(stringIndex-1,'E'); //change left edge people status 
+				}
+				//check for top edge pieces
+				else if (stringIndex < numRows && stringIndex>0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
+					//put random num generator and if statements to check alpha
+					outputString.setCharAt(stringIndex-1,'E');//change top edge peoples status
+				}
+				//check if bottom edge piece
+				else if (currentRowNum == numRows && stringIndex>((currentRowNum-1)*(numRows)+1) && stringIndex<numIndiv && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
+					//put random num generator and if statements to check alpha
+					outputString.setCharAt(stringIndex-1,'E'); //change bottom edge people status
+				}
+				//all inside people
+				else {
+					//put random num generator and if statements to check alpha
+					outputString.setCharAt(stringIndex-1,'I'); //change inside people status
+				}
+				//increment currentRowNum 
+				if (stringIndex%numRows==0 && stringIndex > 0 && stringIndex<numIndiv) {
+				++currentRowNum;
+					/*System.out.print(stringIndex + " ");
+					System.out.println(currentRowNum);*/
 				}
 			}
-			for (int i=1; outputString.length()>=i; i++) {
-				if(outputString.charAt(i-1)=='I') {
-					infecNum++;
+
+			//format outputString and print
+			try {
+				FileWriter fWriter = new FileWriter("virussim.txt", true);
+				PrintWriter pWriter = new PrintWriter(fWriter);
+				int infecNum = 0;
+				int recovNum = 0;
+				int susNum = 0;
+				int gcd = 0;
+				for (int i= 1;outputString.length()>=i;++i) {
+					System.out.print(outputString.charAt(i-1));
+					pWriter.print(outputString.charAt(i-1));
+					if (i%numRows == 0 && i>0) {
+						System.out.println("");
+						pWriter.println("");
+					}
 				}
-			}
-			for (int i=1; outputString.length()>=i; i++) {
-				if(outputString.charAt(i-1)=='R') {
-					recovNum++;
+				for (int i=1; outputString.length()>=i; i++) {
+					if(outputString.charAt(i-1)=='I') {
+						infecNum++;
+					}
 				}
-			}
-			for (int i=1; outputString.length()>=i; i++) {
-				if(outputString.charAt(i-1)=='S') {
-					susNum++;
+				for (int i=1; outputString.length()>=i; i++) {
+					if(outputString.charAt(i-1)=='R') {
+						recovNum++;
+					}
 				}
-			}
-			int num1 = infecNum;
-			int num2 = numIndiv;
-			while (num1 != num2) {
-				if (num1 > num2) {
-					num1 = num1 - num2;
-					gcd = num1;
-				} else {
-					num2 = num2 - num1;
-					gcd = num2;
+				for (int i=1; outputString.length()>=i; i++) {
+					if(outputString.charAt(i-1)=='S') {
+						susNum++;
+					}
 				}
+				int num1 = infecNum;
+				int num2 = numIndiv;
+				while (num1 != num2) {
+					if (num1 > num2) {
+						num1 = num1 - num2;
+						gcd = num1;
+					} else {
+						num2 = num2 - num1;
+						gcd = num2;
+					}
+				}
+				pWriter.println("Number of infected individuals: " + infecNum);
+				pWriter.println("Number of recovered individuals: " + recovNum);
+				pWriter.println("Number of susceptible individuals: " + susNum);
+				pWriter.println("Ratio of infected individuals to total number of individuals: " + (infecNum/gcd) + ":" + (numIndiv/gcd));
+				pWriter.close();
+			} catch (IOException ioe) {
+				System.out.println("Error has occurred.");
 			}
-			pWriter.println("Number of infected individuals: " + infecNum);
-			pWriter.println("Number of recovered individuals: " + recovNum);
-			pWriter.println("Number of susceptible individuals: " + susNum);
-			pWriter.println("Ratio of infected individuals to total number of individuals: " + (infecNum/gcd) + ":" + (numIndiv/gcd));
-			pWriter.close();
-		} catch (IOException ioe) {
-			System.out.println("Error has occurred.");
 		}
 		****************************************************************************************************
 	}
