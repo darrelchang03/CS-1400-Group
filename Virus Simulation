@@ -199,28 +199,29 @@ public class VirusSimulation {
 
 	public static int testTopNeighbor(int stringIndex, int numIdv, String createdString) {
 		int isInfected = 0;
-		if(createdString.charAt(stringIndex-((int)Math.sqrt(numIdv)))=='I')
+		if(createdString.charAt(stringIndex-1-((int)Math.sqrt(numIdv)))=='I')
 			isInfected = 1;
 			return isInfected;
 	}
 	public static int testLeftNeighbor(int stringIndex, int numIdv, String createdString) {
 		int isInfected = 0;
-		if(createdString.charAt(stringIndex-1)=='I')
+		if(createdString.charAt(stringIndex-2)=='I')
 			isInfected = 1;
 		return isInfected;
 	}
 	public static int testRightNeighbor(int stringIndex, int numIdv, String createdString) {
 		int isInfected = 0;
-		if(createdString.charAt(stringIndex+1)=='I')
+		if(createdString.charAt(stringIndex)=='I')
 			isInfected = 1;
 		return isInfected;
 	}
 	public static int testBottomNeighbor(int stringIndex, int numIdv, String createdString) {
 		int isInfected = 0;
-		if(createdString.charAt(stringIndex+((int)Math.sqrt(numIdv)))=='I')
+		if(createdString.charAt(stringIndex-1+((int)Math.sqrt(numIdv)))=='I')
 			isInfected = 1;
 			return isInfected;
 	}
+	
 	
 	public static int getNumber0to100() {
 	    return (int) ((Math.random() * (100 - 0)) + 0);
