@@ -42,15 +42,15 @@ public class VirusSimulation {
 			firstInfected = scnr.nextInt();
 		} while(firstInfected < 0 || firstInfected > numIdv);
 		
-		********************************************************************************************************************************
-		Ethan's Code - when u guys can u should take a look at my code to understand how it works and to know where to add ur guys parts
-		(it has most of what we have done combined)
-		- corrected user input validation from above
-		- create string based on user input
-		- check which string indicies are corners, edges(top,bottom,left,right), and inside
-		- format string output in array
-		-------------------welcome to change stuff to make more efficient BUT KEEP MAIN STRUCTURE PLS-----------------------
-		*********************************************************************************************************************************
+//		********************************************************************************************************************************
+//		Ethan's Code - when u guys can u should take a look at my code to understand how it works and to know where to add ur guys parts
+//		(it has most of what we have done combined)
+//		- corrected user input validation from above
+//		- create string based on user input
+//		- check which string indicies are corners, edges(top,bottom,left,right), and inside
+//		- format string output in array
+//		-------------------welcome to change stuff to make more efficient BUT KEEP MAIN STRUCTURE PLS-----------------------
+//		*********************************************************************************************************************************
 		int numRecovered = 0;
 		int numInfected = 0;
 		int numSuseptable = 0;
@@ -176,6 +176,6 @@ public class VirusSimulation {
 				System.out.println("Error has occurred.");
 			}
 		}
-		****************************************************************************************************
+//		****************************************************************************************************
 	}
 }
