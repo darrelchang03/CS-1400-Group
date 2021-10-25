@@ -32,7 +32,7 @@ public class VirusSimulation {
 	// user input validation for numSteps (number of steps)
 		int numSteps;
 		do {
-			System.out.println("Please input the number of steps for this simulation. It should be greater than 0.");
+			System.out.println("Please input the number of times the simulation will run.");
 			numSteps = scnr.nextInt();
 		} while(numSteps<=0);
 		
