@@ -72,50 +72,54 @@ public class VirusSimulation {
 				if (outputString.charAt(stringIndex-1)=='R') {
 					continue;
 				}
-				//check if top left corner piece
-				if (stringIndex==1) {
-					//put random num generator and if statements to check alpha
-					outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
-				}
-				//check if top right corner piece
-				else if (stringIndex==numRows) {
-					//put random num generator and if statements to check alpha
-					outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
-				}
-				//check if bottom left corner piece
-				else if (stringIndex==numIdv-numRows+1) {
-					//put random num generator and if statements to check alpha
-					outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
+				//check if stringIndex has infected neighbors
+				boolean hasInfectedNeighbors = false;
+				if(testLeftNeighbor(stringIndex, numIdv, createdString)+testRightNeighbor(stringIndex, numIdv, createdString)+testTopNeighbor(stringIndex, numIdv, createdString)+testBottomNeighbor(stringIndex, numIdv, createdString)>0)
+					hasInfectedNeighbors = true;
+				//check and test top left corner piece
+				if (stringIndex==1 && hasInfectedNeighbors) {
+					if(getNumber0to100()<=(alpha*(testRightNeighbor(stringIndex, numIdv, createdString)+testBottomNeighbor(stringIndex, numIdv, createdString))))
+						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
+					}
+				//check and test top right corner piece
+				else if (stringIndex==numRows && hasInfectedNeighbors) {
+					if(getNumber0to100()<=(alpha*(testLeftNeighbor(stringIndex, numIdv, createdString)+testBottomNeighbor(stringIndex, numIdv, createdString))))
+						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
+					}
+				//check and test bottom left corner piece
+				else if (stringIndex==numIdv-numRows+1 && hasInfectedNeighbors) {
+					if(getNumber0to100()<=(alpha*(testRightNeighbor(stringIndex, numIdv, createdString)+testTopNeighbor(stringIndex, numIdv, createdString))))
+						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
 				}
 				//check if bottom right corner piece
-				else if (stringIndex==numIdv) {
-					//put random num generator and if statements to check alpha
-					outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
+				else if (stringIndex==numIdv && hasInfectedNeighbors) {
+					if(getNumber0to100()<=(alpha*(testLeftNeighbor(stringIndex, numIdv, createdString)+testTopNeighbor(stringIndex, numIdv, createdString))))
+						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
 				}
 				//check if right edge piece
-				else if (stringIndex>numRows && stringIndex!=numIdv && stringIndex%numRows == 0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIdv-numRows+1) {
-					//put random num generator and if statements to check alpha
-					outputString.setCharAt(stringIndex-1,'E'); //change corner people status 
+				else if (stringIndex>numRows && stringIndex!=numIdv && stringIndex%numRows == 0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIdv-numRows+1 && hasInfectedNeighbors) {
+					if(getNumber0to100()<=(alpha*(testLeftNeighbor(stringIndex, numIdv, createdString)+testBottomNeighbor(stringIndex, numIdv, createdString)+testTopNeighbor(stringIndex, numIdv, createdString))))
+						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
 				}
 				//check if left edge piece
-				else if (currentRowNum>1 && stringIndex==(currentRowNum-1)*(numRows)+1 && stringIndex!=numIdv-numRows+1 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIdv-numRows+1) {
-					//put random num generator and if statements to check alpha
-					outputString.setCharAt(stringIndex-1,'E'); //change left edge people status 
+				else if (currentRowNum>1 && stringIndex==(currentRowNum-1)*(numRows)+1 && stringIndex!=numIdv-numRows+1 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIdv-numRows+1 && hasInfectedNeighbors) {
+					if(getNumber0to100()<=(alpha*(testRightNeighbor(stringIndex, numIdv, createdString)+testBottomNeighbor(stringIndex, numIdv, createdString)+testTopNeighbor(stringIndex, numIdv, createdString))))
+						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
 				}
 				//check for top edge pieces
-				else if (stringIndex < numRows && stringIndex>0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIdv-numRows+1) {
-					//put random num generator and if statements to check alpha
-					outputString.setCharAt(stringIndex-1,'E');//change top edge peoples status
+				else if (stringIndex < numRows && stringIndex>0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIdv-numRows+1 && hasInfectedNeighbors) {
+					if(getNumber0to100()<=(alpha*(testBottomNeighbor(stringIndex, numIdv, createdString)+testLeftNeighbor(stringIndex, numIdv, createdString)+testRightNeighbor(stringIndex, numIdv, createdString))))
+						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
 				}
 				//check if bottom edge piece
-				else if (currentRowNum == numRows && stringIndex>((currentRowNum-1)*(numRows)+1) && stringIndex<numIdv && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIdv-numRows+1) {
-					//put random num generator and if statements to check alpha
-					outputString.setCharAt(stringIndex-1,'E'); //change bottom edge people status
+				else if (currentRowNum == numRows && stringIndex>((currentRowNum-1)*(numRows)+1) && stringIndex<numIdv && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIdv-numRows+1 && hasInfectedNeighbors) {
+					if(getNumber0to100()<=(alpha*(testTopNeighbor(stringIndex, numIdv, createdString)+testLeftNeighbor(stringIndex, numIdv, createdString)+testRightNeighbor(stringIndex, numIdv, createdString))))
+						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
 				}
 				//all inside people
-				else {
-					//put random num generator and if statements to check alpha
-					outputString.setCharAt(stringIndex-1,'I'); //change inside people status
+				else if (hasInfectedNeighbors){
+					if(getNumber0to100()<=(alpha*(testLeftNeighbor(stringIndex, numIdv, createdString)+testLeftNeighbor(stringIndex, numIdv, createdString)+testBottomNeighbor(stringIndex, numIdv, createdString)+testTopNeighbor(stringIndex, numIdv, createdString))))
+						outputString.setCharAt(stringIndex-1,'I'); //change inside people status
 				}
 				//increment currentRowNum 
 				if (stringIndex%numRows==0 && stringIndex > 0 && stringIndex<numIdv) {
@@ -177,6 +181,34 @@ public class VirusSimulation {
 			}
 		}
 //		****************************************************************************************************
+	}
 
+	public static int testTopNeighbor(int stringIndex, int numIdv, String createdString) {
+		int isInfected = 0;
+		if(createdString.charAt(stringIndex-(int)Math.sqrt(numIdv))=='I')
+			isInfected = 1;
+			return isInfected;
+	}
+	public static int testLeftNeighbor(int stringIndex, int numIdv, String createdString) {
+		int isInfected = 0;
+		if(createdString.charAt(stringIndex-1)=='I')
+			isInfected = 1;
+		return isInfected;
+	}
+	public static int testRightNeighbor(int stringIndex, int numIdv, String createdString) {
+		int isInfected = 0;
+		if(createdString.charAt(stringIndex+1)=='I')
+			isInfected = 1;
+		return isInfected;
+	}
+	public static int testBottomNeighbor(int stringIndex, int numIdv, String createdString) {
+		int isInfected = 0;
+		if(createdString.charAt(stringIndex+(int)Math.sqrt(numIdv))=='I')
+			isInfected = 1;
+			return isInfected;
+	}
+	
+	public static int getNumber0to100() {
+	    return (int) ((Math.random() * (100 - 0)) + 0);
 	}
 }
