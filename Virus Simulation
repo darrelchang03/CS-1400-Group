@@ -98,12 +98,12 @@ public class VirusSimulation {
 				//put random num generator and if statements to check alpha
 				outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
 			}
-			//check if bottom right corner piece
+			//check if bottom left corner piece
 			else if (stringIndex==numIndiv-numRows+1) {
 				//put random num generator and if statements to check alpha
 				outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
 			}
-			//check if bottom left corner piece
+			//check if bottom right corner piece
 			else if (stringIndex==numIndiv) {
 				//put random num generator and if statements to check alpha
 				outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
