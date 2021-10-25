@@ -87,28 +87,44 @@ public class VirusSimulation {
 			if (outputString.charAt(stringIndex-1)=='R') {
 				continue;
 			}
-			//check if corner piece
-			if (stringIndex==1 || stringIndex==numRows || stringIndex==numIndiv-numRows+1 || stringIndex==numIndiv) {
+			//check if top left corner piece
+			if (stringIndex==1) {
+				System.out.println(stringIndex);
+				//put random num generator and if statements to check alpha
+				outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
+			}
+			//check if top right corner piece
+			else if (stringIndex==numRows) {
+				//put random num generator and if statements to check alpha
+				outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
+			}
+			//check if bottom right corner piece
+			else if (stringIndex==numIndiv-numRows+1) {
+				//put random num generator and if statements to check alpha
+				outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
+			}
+			//check if bottom left corner piece
+			else if (stringIndex==numIndiv) {
 				//put random num generator and if statements to check alpha
 				outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
 			}
 			//check if right edge piece
-			else if (stringIndex>numRows && stringIndex!=numIndiv && stringIndex%numRows == 0) {
+			else if (stringIndex>numRows && stringIndex!=numIndiv && stringIndex%numRows == 0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
 				//put random num generator and if statements to check alpha
 				outputString.setCharAt(stringIndex-1,'E'); //change corner people status 
 			}
 			//check if left edge piece
-			else if (currentRowNum>1 && stringIndex==(currentRowNum-1)*(numRows)+1 && stringIndex!=numIndiv-numRows+1 ) {
+			else if (currentRowNum>1 && stringIndex==(currentRowNum-1)*(numRows)+1 && stringIndex!=numIndiv-numRows+1 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
 				//put random num generator and if statements to check alpha
 				outputString.setCharAt(stringIndex-1,'E'); //change left edge people status 
 			}
 			//check for top edge pieces
-			else if (stringIndex < numRows && stringIndex>0) {
+			else if (stringIndex < numRows && stringIndex>0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
 				//put random num generator and if statements to check alpha
 				outputString.setCharAt(stringIndex-1,'E');//change top edge peoples status
 			}
 			//check if bottom edge piece
-			else if (currentRowNum == numRows && stringIndex>((currentRowNum-1)*(numRows)+1) && stringIndex<numIndiv) {
+			else if (currentRowNum == numRows && stringIndex>((currentRowNum-1)*(numRows)+1) && stringIndex<numIndiv && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
 				//put random num generator and if statements to check alpha
 				outputString.setCharAt(stringIndex-1,'E'); //change bottom edge people status
 			}
