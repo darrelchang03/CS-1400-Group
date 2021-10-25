@@ -89,7 +89,6 @@ public class VirusSimulation {
 			}
 			//check if top left corner piece
 			if (stringIndex==1) {
-				System.out.println(stringIndex);
 				//put random num generator and if statements to check alpha
 				outputString.setCharAt(stringIndex-1,'C'); //change corner people status 
 			}
