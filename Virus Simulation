@@ -129,7 +129,7 @@ public class VirusSimulation {
 		try {
 			FileWriter fWriter = new FileWriter("virussim.txt", true);
 			PrintWriter pWriter = new PrintWriter(fWriter);
-			int infecNum = 9;
+			int infecNum = 0;
 			int recovNum = 0;
 			int susNum = 0;
 			int gcd = 0;
