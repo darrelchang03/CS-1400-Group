@@ -141,7 +141,7 @@ public class VirusSimulation {
 					pWriter.println("");
 				}
 			}
-			/*for (int i=1; outputString.length()>=i; i++) {
+			for (int i=1; outputString.length()>=i; i++) {
 				if(outputString.charAt(i-1)=='I') {
 					infecNum++;
 				}
@@ -155,7 +155,7 @@ public class VirusSimulation {
 				if(outputString.charAt(i-1)=='S') {
 					susNum++;
 				}
-			}*/
+			}
 			int num1 = infecNum;
 			int num2 = numIndiv;
 			while (num1 != num2) {
