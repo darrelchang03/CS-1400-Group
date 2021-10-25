@@ -133,26 +133,26 @@ public class VirusSimulation {
 				int recovNum = 0;
 				int susNum = 0;
 				int gcd = 0;
-				for (int i= 1;outputString.length()>=i;++i) {
-					System.out.print(outputString.charAt(i-1));
-					pWriter.print(outputString.charAt(i-1));
-					if (i%numRows == 0 && i>0) {
+				for (int j= 1;outputString.length()>=j;++j) {
+					System.out.print(outputString.charAt(j-1));
+					pWriter.print(outputString.charAt(j-1));
+					if (i%numRows == 0 && j>0) {
 						System.out.println("");
 						pWriter.println("");
 					}
 				}
-				for (int i=1; outputString.length()>=i; i++) {
-					if(outputString.charAt(i-1)=='I') {
+				for (int j=1; outputString.length()>=j; j++) {
+					if(outputString.charAt(j-1)=='I') {
 						infecNum++;
 					}
 				}
-				for (int i=1; outputString.length()>=i; i++) {
-					if(outputString.charAt(i-1)=='R') {
+				for (int j=1; outputString.length()>=j; j++) {
+					if(outputString.charAt(j-1)=='R') {
 						recovNum++;
 					}
 				}
-				for (int i=1; outputString.length()>=i; i++) {
-					if(outputString.charAt(i-1)=='S') {
+				for (int j=1; outputString.length()>=j; j++) {
+					if(outputString.charAt(j-1)=='S') {
 						susNum++;
 					}
 				}
@@ -177,5 +177,6 @@ public class VirusSimulation {
 			}
 		}
 //		****************************************************************************************************
+
 	}
 }
