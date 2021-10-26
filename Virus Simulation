@@ -258,7 +258,6 @@ public class VirusSimulation {
 		while ((Math.floor(root)-root)!=0){
 			System.out.println("Please input a number of individuals. It should be a perfect square value.");
 			numIndiv = scnr.nextInt();
-			root = 6;
 		}
 		int numRows = (int) Math.sqrt(numIndiv);//used for later calculations
 		
@@ -303,7 +302,7 @@ public class VirusSimulation {
 				++counter;
 			}
 		}
-		System.out.println("First");
+		System.out.println("Starting Grid");
 		for(int i = 0; i < numIndiv; i++) {
 			System.out.print(createdString.charAt(i));
 			if((i+1) % root == 0) {
@@ -316,6 +315,7 @@ public class VirusSimulation {
 		currentIteration = new StringBuilder(prevIteration);
 		
 		//print the very first iteration only
+		System.out.println("Iteration 1");
 		try {
 			FileWriter fWriter = new FileWriter("virussim.txt", true);
 			PrintWriter pWriter = new PrintWriter(fWriter);
@@ -365,7 +365,10 @@ public class VirusSimulation {
 		
 		//need this syntax to change individual characters of string
 		int currentRowNum = 1;//declare row number
-		for (int a = 0; a<numSteps;++a) {
+		System.out.println("Starting Simulation");
+		for (int a = 0; a<numSteps-1;++a) {
+			System.out.println("");
+			System.out.println("Iteration "+(a+2));
 			for (int stringIndex = 1; stringIndex<=numIndiv; ++stringIndex) {//iterate through entire string char by char
 				//check is user is already recovered
 				if (prevIteration.charAt(stringIndex-1)=='R') {
