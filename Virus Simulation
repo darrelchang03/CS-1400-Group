@@ -136,10 +136,10 @@ public class VirusSimulation {
 			}
 			//all inside people
 			else {
-				if(testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testBottomNeighbor(stringIndex, numIndiv, prevIteration)+testTopNeighbor(stringIndex, numIndiv, prevIteration)>0) {
+				if(testRightNeighbor(stringIndex, numIndiv, prevIteration)+testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testBottomNeighbor(stringIndex, numIndiv, prevIteration)+testTopNeighbor(stringIndex, numIndiv, prevIteration)>0) {
 					if(getNumber0to100()<=(100*alpha*(testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testRightNeighbor(stringIndex, numIndiv, prevIteration)+testBottomNeighbor(stringIndex, numIndiv, prevIteration)+testTopNeighbor(stringIndex, numIndiv, prevIteration))))
 						currentIteration.setCharAt(stringIndex-1,'I'); //change inside people status
-					}
+				}
 			}
 			//increment currentRowNum 
 			if (stringIndex%numRows==0 && stringIndex > 0 && stringIndex<numIndiv) {
