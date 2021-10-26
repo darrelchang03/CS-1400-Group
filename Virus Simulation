@@ -233,7 +233,7 @@ public class VirusSimulation {
 
 
 //*********************************************************************
-Everything below was just to debug and make it look nicer
+Everything below has been debugged by Bill and Christopher
 
 public class VirusSimulation {
 	
@@ -479,7 +479,7 @@ public class VirusSimulation {
 				int infecNum = 0;
 				int recovNum = 0;
 				int susNum = 0;
-				int gcd = 0;
+				int gcd = numIndiv;
 				for (int k= 0;k<numIndiv;k++) {
 					if(currentIteration.charAt(k)=='I') {
 						infecNum++;
@@ -499,7 +499,7 @@ public class VirusSimulation {
 				}
 				int num1 = infecNum;
 				int num2 = numIndiv;
-				while (num1 != num2) {
+				while ((num1 != num2) && (num1 != 0)) {
 					if (num1 > num2) {
 						num1 = num1 - num2;
 						gcd = num1;
