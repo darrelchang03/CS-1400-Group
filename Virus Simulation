@@ -337,12 +337,12 @@ public class VirusSimulation {
 			createdString = createdString + "S";
 			++counter;
 		}
-		System.out.println(createdString);
+		//System.out.println(createdString);
 		
 		StringBuilder prevIteration = new StringBuilder(createdString);
-		StringBuilder currentIteration = new StringBuilder(createdString);//need this syntax to change individual characters of string
+		StringBuilder currentIteration = new StringBuilder(prevIteration);//need this syntax to change individual characters of string
 		int currentRowNum = 1;//declare row number
-		
+		for (int i = 0; i<numSteps;++i) {
 		for (int stringIndex = 1; stringIndex<=numIndiv; ++stringIndex) {//iterate through entire string char by char
 			//check is user is already recovered
 			if (prevIteration.charAt(stringIndex-1)=='R') {
@@ -351,64 +351,64 @@ public class VirusSimulation {
 			
 			//check if top left corner piece
 			if (stringIndex==1) {
-				if(testRightNeighbor(stringIndex, numIndiv, createdString)+testBottomNeighbor(stringIndex, numIndiv, createdString)>0) {
-					if(getNumber0to100()<=(alpha*(testRightNeighbor(stringIndex, numIndiv, createdString)+testBottomNeighbor(stringIndex, numIndiv, createdString))))
+				if(testRightNeighbor(stringIndex, numIndiv, prevIteration)+testBottomNeighbor(stringIndex, numIndiv, prevIteration)>0) {
+					if(getNumber0to100()<=(alpha*(testRightNeighbor(stringIndex, numIndiv, prevIteration)+testBottomNeighbor(stringIndex, numIndiv, prevIteration))))
 						currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
 					}
 			}
 			//check if top right corner piece
 			else if (stringIndex==numRows) {
-				if(testLeftNeighbor(stringIndex, numIndiv, createdString)+testBottomNeighbor(stringIndex, numIndiv, createdString)>0) {
-					if(getNumber0to100()<=(100*alpha*(testLeftNeighbor(stringIndex, numIndiv, createdString)+testBottomNeighbor(stringIndex, numIndiv, createdString))))
-						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
+				if(testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testBottomNeighbor(stringIndex, numIndiv, prevIteration)>0) {
+					if(getNumber0to100()<=(100*alpha*(testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testBottomNeighbor(stringIndex, numIndiv, prevIteration))))
+						currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
 					}
 			}
 			//check if bottom left corner piece
 			else if (stringIndex==numIndiv-numRows+1) {
-				if(testRightNeighbor(stringIndex, numIndiv, createdString)+testTopNeighbor(stringIndex, numIndiv, createdString)>0) {
-					if(getNumber0to100()<=(100*alpha*(testRightNeighbor(stringIndex, numIndiv, createdString)+testTopNeighbor(stringIndex, numIndiv, createdString))))
-						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
+				if(testRightNeighbor(stringIndex, numIndiv, prevIteration)+testTopNeighbor(stringIndex, numIndiv, prevIteration)>0) {
+					if(getNumber0to100()<=(100*alpha*(testRightNeighbor(stringIndex, numIndiv, prevIteration)+testTopNeighbor(stringIndex, numIndiv, prevIteration))))
+						currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
 			}
 			//check if bottom right corner piece
 			else if (stringIndex==numIndiv) {
-				if(testLeftNeighbor(stringIndex, numIndiv, createdString)+testTopNeighbor(stringIndex, numIndiv, createdString)>0) {
-					if(getNumber0to100()<=(100*alpha*(testLeftNeighbor(stringIndex, numIndiv, createdString)+testTopNeighbor(stringIndex, numIndiv, createdString))))
-						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
+				if(testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testTopNeighbor(stringIndex, numIndiv, prevIteration)>0) {
+					if(getNumber0to100()<=(100*alpha*(testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testTopNeighbor(stringIndex, numIndiv, prevIteration))))
+						currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
 				}
 			}
 			//check if right edge piece
 			else if (stringIndex>numRows && stringIndex!=numIndiv && stringIndex%numRows == 0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
-				/if(testLeftNeighbor(stringIndex, numIndiv, createdString)+testBottomNeighbor(stringIndex, numIndiv, createdString)+testTopNeighbor(stringIndex, numIndiv, createdString)>0) {
-					if(getNumber0to100()<=(100*alpha*(testLeftNeighbor(stringIndex, numIndiv, createdString)+testBottomNeighbor(stringIndex, numIndiv, createdString)+testTopNeighbor(stringIndex, numIndiv, createdString))))
-						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
+				if(testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testBottomNeighbor(stringIndex, numIndiv, prevIteration)+testTopNeighbor(stringIndex, numIndiv, prevIteration)>0) {
+					if(getNumber0to100()<=(100*alpha*(testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testBottomNeighbor(stringIndex, numIndiv, prevIteration)+testTopNeighbor(stringIndex, numIndiv, prevIteration))))
+						currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
 				}
 			}
 			//check if left edge piece
 			else if (currentRowNum>1 && stringIndex==(currentRowNum-1)*(numRows)+1 && stringIndex!=numIndiv-numRows+1 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
-				if(testRightNeighbor(stringIndex, numIndiv, createdString)+testBottomNeighbor(stringIndex, numIndiv, createdString)+testTopNeighbor(stringIndex, numIndiv, createdString)>0) {
-					if(getNumber0to100()<=(100*alpha*(testRightNeighbor(stringIndex, numIndiv, createdString)+testBottomNeighbor(stringIndex, numIndiv, createdString)+testTopNeighbor(stringIndex, numIndiv, createdString))))
-						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
+				if(testRightNeighbor(stringIndex, numIndiv, prevIteration)+testBottomNeighbor(stringIndex, numIndiv, prevIteration)+testTopNeighbor(stringIndex, numIndiv, prevIteration)>0) {
+					if(getNumber0to100()<=(100*alpha*(testRightNeighbor(stringIndex, numIndiv, prevIteration)+testBottomNeighbor(stringIndex, numIndiv, prevIteration)+testTopNeighbor(stringIndex, numIndiv, prevIteration))))
+						currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
 				} 
 			}
 			//check for top edge pieces
 			else if (stringIndex < numRows && stringIndex>0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
-				if(testBottomNeighbor(stringIndex, numIndiv, createdString)+testLeftNeighbor(stringIndex, numIndiv, createdString)+testRightNeighbor(stringIndex, numIndiv, createdString)>0) {
-					if(getNumber0to100()<=(100*alpha*(testBottomNeighbor(stringIndex, numIndiv, createdString)+testLeftNeighbor(stringIndex, numIndiv, createdString)+testRightNeighbor(stringIndex, numIndiv, createdString))))
-						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
+				if(testBottomNeighbor(stringIndex, numIndiv, prevIteration)+testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testRightNeighbor(stringIndex, numIndiv, prevIteration)>0) {
+					if(getNumber0to100()<=(100*alpha*(testBottomNeighbor(stringIndex, numIndiv, prevIteration)+testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testRightNeighbor(stringIndex, numIndiv, prevIteration))))
+						currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
 				}
 			}
 			//check if bottom edge piece
 			else if (currentRowNum == numRows && stringIndex>((currentRowNum-1)*(numRows)+1) && stringIndex<numIndiv && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
-				if(testTopNeighbor(stringIndex, numIndiv, createdString)+testLeftNeighbor(stringIndex, numIndiv, createdString)+testRightNeighbor(stringIndex, numIndiv, createdString)>0) {
-					if(getNumber0to100()<=(100*alpha*(testTopNeighbor(stringIndex, numIndiv, createdString)+testLeftNeighbor(stringIndex, numIndiv, createdString)+testRightNeighbor(stringIndex, numIndiv, createdString))))
-						outputString.setCharAt(stringIndex-1,'I'); //change corner person's status 
+				if(testTopNeighbor(stringIndex, numIndiv, prevIteration)+testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testRightNeighbor(stringIndex, numIndiv, prevIteration)>0) {
+					if(getNumber0to100()<=(100*alpha*(testTopNeighbor(stringIndex, numIndiv, prevIteration)+testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testRightNeighbor(stringIndex, numIndiv, prevIteration))))
+						currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
 				}
 			}
 			//all inside people
 			else {
-				if(testLeftNeighbor(stringIndex, numIndiv, createdString)+testLeftNeighbor(stringIndex, numIndiv, createdString)+testBottomNeighbor(stringIndex, numIndiv, createdString)+testTopNeighbor(stringIndex, numIndiv, createdString)>0) {
-					if(getNumber0to100()<=(100*alpha*(testLeftNeighbor(stringIndex, numIndiv, createdString)+testRightNeighbor(stringIndex, numIndiv, createdString)+testBottomNeighbor(stringIndex, numIndiv, createdString)+testTopNeighbor(stringIndex, numIndiv, createdString))))
-						outputString.setCharAt(stringIndex-1,'I'); //change inside people status
+				if(testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testBottomNeighbor(stringIndex, numIndiv, prevIteration)+testTopNeighbor(stringIndex, numIndiv, prevIteration)>0) {
+					if(getNumber0to100()<=(100*alpha*(testLeftNeighbor(stringIndex, numIndiv, prevIteration)+testRightNeighbor(stringIndex, numIndiv, prevIteration)+testBottomNeighbor(stringIndex, numIndiv, prevIteration)+testTopNeighbor(stringIndex, numIndiv, prevIteration))))
+						currentIteration.setCharAt(stringIndex-1,'I'); //change inside people status
 					}
 			}
 			//increment currentRowNum 
@@ -417,21 +417,16 @@ public class VirusSimulation {
 				/*System.out.print(stringIndex + " ");
 				System.out.println(currentRowNum);*/
 			}
-			
-			if(prevIteration.charAt(stringIndex) == 'I') {
-				if(getNumber0to100() <= (beta * 100)) {
-					currentIteration.setCharAt(stringIndex-1, 'R');
-				}
-			}
 			prevIteration = currentIteration;
 		}
 		
 		//format outputString and print
-		for (int i= 1;currentIteration.length()>=i;++i) {
-			System.out.print(currentIteration.charAt(i-1));
-			if (i%numRows == 0 && i>0) {
+		for (int j= 1;currentIteration.length()>=j;++j) {
+			System.out.print(currentIteration.charAt(j-1));
+			if (j%numRows == 0 && j>0) {
 				System.out.println("");
 			}
+		}
 		}
 		
 		try {
@@ -441,27 +436,21 @@ public class VirusSimulation {
 			int recovNum = 0;
 			int susNum = 0;
 			int gcd = 0;
-			for (int i= 1;outputString.length()>=i;++i) {
-				System.out.print(outputString.charAt(i-1));
-				pWriter.print(outputString.charAt(i-1));
-				if (i%numRows == 0 && i>0) {
-					System.out.println("");
-					pWriter.println("");
-				}
-			}
-			for (int i=1; outputString.length()>=i; i++) {
-				if(outputString.charAt(i-1)=='I') {
+			for (int k= 1;currentIteration.length()>=k;++k) {
+				if(currentIteration.charAt(k-1)=='I') {
 					infecNum++;
 				}
-			}
-			for (int i=1; outputString.length()>=i; i++) {
-				if(outputString.charAt(i-1)=='R') {
+				if(currentIteration.charAt(k-1)=='R') {
 					recovNum++;
 				}
-			}
-			for (int i=1; outputString.length()>=i; i++) {
-				if(outputString.charAt(i-1)=='S') {
+				if(currentIteration.charAt(k-1)=='S') {
 					susNum++;
+				}
+				System.out.print(currentIteration.charAt(k-1));
+				pWriter.print(currentIteration.charAt(k-1));
+				if (k%numRows == 0 && k>0) {
+					System.out.println("");
+					pWriter.println("");
 				}
 			}
 			int num1 = infecNum;
@@ -484,27 +473,30 @@ public class VirusSimulation {
 			System.out.println("Error has occurred.");
 		}
 		}
-		public static int testTopNeighbor(int stringIndex, int numIndiv, String createdString) {
+	}
+	
+		
+		public static int testTopNeighbor(int stringIndex, int numIndiv, StringBuilder prevIteration) {
 			int isInfected = 0;
-			if(createdString.charAt(stringIndex-1-((int)Math.sqrt(numIndiv)))=='I')
+			if(prevIteration.charAt(stringIndex-1-((int)Math.sqrt(numIndiv)))=='I')
 				isInfected = 1;
 				return isInfected;
 		}
-		public static int testLeftNeighbor(int stringIndex, int numIndiv, String createdString) {
+		public static int testLeftNeighbor(int stringIndex, int numIndiv, StringBuilder prevIteration) {
 			int isInfected = 0;
-			if(createdString.charAt(stringIndex-2)=='I')
+			if(prevIteration.charAt(stringIndex-2)=='I')
 				isInfected = 1;
 			return isInfected;
 		}
-		public static int testRightNeighbor(int stringIndex, int numIndiv, String prevIteration) {
+		public static int testRightNeighbor(int stringIndex, int numIndiv, StringBuilder prevIteration) {
 			int isInfected = 0;
-			if(createdString.charAt(stringIndex)=='I')
+			if(prevIteration.charAt(stringIndex)=='I')
 				isInfected = 1;
 			return isInfected;
 		}
-		public static int testBottomNeighbor(int stringIndex, int numIndiv, String createdString) {
+		public static int testBottomNeighbor(int stringIndex, int numIndiv, StringBuilder prevIteration) {
 			int isInfected = 0;
-			if(createdString.charAt(stringIndex-1+((int)Math.sqrt(numIndiv)))=='I')
+			if(prevIteration.charAt(stringIndex-1+((int)Math.sqrt(numIndiv)))=='I')
 				isInfected = 1;
 				return isInfected;
 		}
@@ -512,4 +504,4 @@ public class VirusSimulation {
 		
 		public static int getNumber0to100() {
 		    return (int) ((Math.random() * (100 - 0)) + 0);
-		}
+	}
