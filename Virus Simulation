@@ -417,6 +417,12 @@ public class VirusSimulation {
 				/*System.out.print(stringIndex + " ");
 				System.out.println(currentRowNum);*/
 			}
+			
+			if(prevIteration.charAt(stringIndex) == 'I') {
+				if(getNumber0to100() <= (beta * 100)) {
+					currentIteration.setCharAt(stringIndex-1, 'R');
+				}
+			}
 			prevIteration = currentIteration;
 		}
 		
