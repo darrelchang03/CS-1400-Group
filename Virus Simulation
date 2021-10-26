@@ -315,6 +315,54 @@ public class VirusSimulation {
 		prevIteration = new StringBuilder(createdString);
 		currentIteration = new StringBuilder(prevIteration);
 		
+		//print the very first iteration only
+		try {
+			FileWriter fWriter = new FileWriter("virussim.txt", true);
+			PrintWriter pWriter = new PrintWriter(fWriter);
+			int infecNum = 0;
+			int recovNum = 0;
+			int susNum = 0;
+			int gcd = 0;
+			pWriter.println("This is what the grid will start as.");
+			for (int k= 1;currentIteration.length()>=k;++k) {
+				if(currentIteration.charAt(k-1)=='I') {
+					infecNum++;
+				}
+				if(currentIteration.charAt(k-1)=='R') {
+					recovNum++;
+				}
+				if(currentIteration.charAt(k-1)=='S') {
+					susNum++;
+				}
+				System.out.print(currentIteration.charAt(k-1));
+				pWriter.print(currentIteration.charAt(k-1));
+				if (k%numRows == 0 && k>0) {
+					System.out.println("");
+					pWriter.println("");
+				}
+			}
+			int num1 = infecNum;
+			int num2 = numIndiv;
+			while (num1 != num2) {
+				if (num1 > num2) {
+					num1 = num1 - num2;
+					gcd = num1;
+				} else {
+					num2 = num2 - num1;
+					gcd = num2;
+				}
+			}
+			pWriter.println("Number of infected individuals: " + infecNum);
+			pWriter.println("Number of recovered individuals: " + recovNum);
+			pWriter.println("Number of susceptible individuals: " + susNum);
+			pWriter.println("Ratio of infected individuals to total number of individuals: " + (infecNum/gcd) + ":" + (numIndiv/gcd));
+			pWriter.println("The following grids will show the results of the program running " + numSteps + " times.");
+			pWriter.println();
+			pWriter.close();
+		} catch (IOException ioe) {
+			System.out.println("Error has occurred.");
+		}
+		
 		//need this syntax to change individual characters of string
 		int currentRowNum = 1;//declare row number
 		for (int a = 0; a<numSteps;++a) {
@@ -425,49 +473,50 @@ public class VirusSimulation {
 			
 			
 			
-	//		try {
-	//			FileWriter fWriter = new FileWriter("virussim.txt", true);
-	//			PrintWriter pWriter = new PrintWriter(fWriter);
-	//			int infecNum = 0;
-	//			int recovNum = 0;
-	//			int susNum = 0;
-	//			int gcd = 0;
-	//			for (int k= 1;currentIteration.length()>=k;++k) {
-	//				if(currentIteration.charAt(k-1)=='I') {
-	//					infecNum++;
-	//				}
-	//				if(currentIteration.charAt(k-1)=='R') {
-	//					recovNum++;
-	//				}
-	//				if(currentIteration.charAt(k-1)=='S') {
-	//					susNum++;
-	//				}
-	//				System.out.print(currentIteration.charAt(k-1));
-	//				pWriter.print(currentIteration.charAt(k-1));
-	//				if (k%numRows == 0 && k>0) {
-	//					System.out.println("");
-	//					pWriter.println("");
-	//				}
-	//			}
-	//			int num1 = infecNum;
-	//			int num2 = numIndiv;
-	//			while (num1 != num2) {
-	//				if (num1 > num2) {
-	//					num1 = num1 - num2;
-	//					gcd = num1;
-	//				} else {
-	//					num2 = num2 - num1;
-	//					gcd = num2;
-	//				}
-	//			}
-	//			pWriter.println("Number of infected individuals: " + infecNum);
-	//			pWriter.println("Number of recovered individuals: " + recovNum);
-	//			pWriter.println("Number of susceptible individuals: " + susNum);
-	//			pWriter.println("Ratio of infected individuals to total number of individuals: " + (infecNum/gcd) + ":" + (numIndiv/gcd));
-	//			pWriter.close();
-	//		} catch (IOException ioe) {
-	//			System.out.println("Error has occurred.");
-	//		}
+			try {
+				FileWriter fWriter = new FileWriter("virussim.txt", true);
+				PrintWriter pWriter = new PrintWriter(fWriter);
+				int infecNum = 0;
+				int recovNum = 0;
+				int susNum = 0;
+				int gcd = 0;
+				for (int k= 1;currentIteration.length()>=k;++k) {
+					if(currentIteration.charAt(k-1)=='I') {
+						infecNum++;
+					}
+					if(currentIteration.charAt(k-1)=='R') {
+						recovNum++;
+					}
+					if(currentIteration.charAt(k-1)=='S') {
+						susNum++;
+					}
+					System.out.print(currentIteration.charAt(k-1));
+					pWriter.print(currentIteration.charAt(k-1));
+					if (k%numRows == 0 && k>0) {
+						System.out.println("");
+						pWriter.println("");
+					}
+				}
+				int num1 = infecNum;
+				int num2 = numIndiv;
+				while (num1 != num2) {
+					if (num1 > num2) {
+						num1 = num1 - num2;
+						gcd = num1;
+					} else {
+						num2 = num2 - num1;
+						gcd = num2;
+					}
+				}
+				pWriter.println("Number of infected individuals: " + infecNum);
+				pWriter.println("Number of recovered individuals: " + recovNum);
+				pWriter.println("Number of susceptible individuals: " + susNum);
+				pWriter.println("Ratio of infected individuals to total number of individuals: " + (infecNum/gcd) + ":" + (numIndiv/gcd));
+				pWriter.println();
+				pWriter.close();
+			} catch (IOException ioe) {
+				System.out.println("Error has occurred.");
+			}
 		
 		}
 	}
