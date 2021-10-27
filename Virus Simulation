@@ -255,8 +255,8 @@ public class VirusSimulation {
 		
 		//userInput validation for perfect square
 		root = Math.sqrt(numIndiv);
-		while ((Math.floor(root)-root)!=0){
-			System.out.println("Please input a number of individuals. It should be a perfect square value.");
+		while (((Math.floor(root)-root)!=0) || numIndiv<0){
+			System.out.println("Please input a number of individuals. It should be a perfect square value and a positive value.");
 			numIndiv = scnr.nextInt();
 		}
 		int numRows = (int) Math.sqrt(numIndiv);//used for later calculations
@@ -279,9 +279,9 @@ public class VirusSimulation {
 		// user input validation for alpha (infection rate) 
 		float alpha;
 		do{
-			System.out.println("Enter the rate of infection alpha (alpha < 1): ");
+			System.out.println("Enter the rate of infection alpha (alpha <= .25): ");
 			alpha = scnr.nextFloat();
-		} while (alpha < 0);
+		} while (alpha<0 || alpha>.25);
 		
 		// user input validation for beta (recovery rate)
 		float beta;
@@ -302,7 +302,7 @@ public class VirusSimulation {
 				++counter;
 			}
 		}
-		System.out.println("Starting Grid");
+		System.out.println("First");
 		for(int i = 0; i < numIndiv; i++) {
 			System.out.print(createdString.charAt(i));
 			if((i+1) % root == 0) {
@@ -315,7 +315,6 @@ public class VirusSimulation {
 		currentIteration = new StringBuilder(prevIteration);
 		
 		//print the very first iteration only
-		System.out.println("Iteration 1");
 		try {
 			FileWriter fWriter = new FileWriter("virussim.txt", true);
 			PrintWriter pWriter = new PrintWriter(fWriter);
@@ -365,14 +364,10 @@ public class VirusSimulation {
 		
 		//need this syntax to change individual characters of string
 		int currentRowNum = 1;//declare row number
-		System.out.println("Starting Simulation");
-		for (int a = 0; a<numSteps-1;++a) {
-			System.out.println("");
-			System.out.println("Iteration "+(a+2));
-			for (int stringIndex = 1; stringIndex<=numIndiv; ++stringIndex) {//iterate through entire string char by char
+		for (int a = 0; a<numSteps;++a) {
+			for (int stringIndex = 1; stringIndex<=numIndiv; stringIndex++) {//iterate through entire string char by char
 				//check is user is already recovered
 				if (prevIteration.charAt(stringIndex-1)=='R') {
-					continue;
 				}
 				
 				//check if top left corner piece
@@ -392,7 +387,7 @@ public class VirusSimulation {
 					}
 				}
 				//check if bottom left corner piece
-				else if (stringIndex==numIndiv-numRows+1) {
+				else if (stringIndex==(numIndiv-numRows)+1) {
 					if((testRight(stringIndex) + testTop(stringIndex)) > 0) {
 						if(getNumber0to100() <= ((100 * alpha) * (testRight(stringIndex)+testTop(stringIndex)))) {
 							currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
@@ -483,6 +478,7 @@ public class VirusSimulation {
 				int recovNum = 0;
 				int susNum = 0;
 				int gcd = numIndiv;
+				pWriter2.println("Step " + (a+1) + ":");
 				for (int k= 0;k<numIndiv;k++) {
 					if(currentIteration.charAt(k)=='I') {
 						infecNum++;
