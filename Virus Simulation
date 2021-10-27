@@ -215,7 +215,6 @@ public class VirusSimulation {
 					}
 				}
 			}
-			System.out.println("");
 
 			for(int i = 0; i < prevIteration.length(); i++) {
 				prevIteration.setCharAt(i, currentIteration.charAt(i));
@@ -248,7 +247,6 @@ public class VirusSimulation {
 					if(currentIteration.charAt(k)=='S') {
 						susNum++;
 					}
-					
 					pWriter2.print(currentIteration.charAt(k));
 					if ((k+1)%root == 0) {
 						
