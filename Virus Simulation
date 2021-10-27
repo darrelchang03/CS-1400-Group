@@ -3,32 +3,38 @@ import java.util.Scanner;
 import java.io.*;
 
 public class VirusSimulation {
+	
 	static int numIndiv;
-	static int indexOfInfected;
 	static StringBuilder prevIteration;
 	static StringBuilder currentIteration;
-	static String indexTest = "";
 	static double root;
+	
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Scanner scnr = new Scanner(System.in);
+		int numRecovered = 0;
+		int numInfected = 0;
+		int numSuseptable = 0;
+		
+		//ask user to input perfect square 
+		System.out.println("Please input a number of individuals. It should be a perfect square value.");
+		numIndiv = scnr.nextInt();
 		
 		//userInput validation for perfect square
-		do {
-			System.out.println("Please input a number of individuals. It should be a perfect square value.");
+		root = Math.sqrt(numIndiv);
+		while (((Math.floor(root)-root)!=0) || numIndiv<0){
+			System.out.println("Please input a number of individuals. It should be a perfect square value and a positive value.");
 			numIndiv = scnr.nextInt();
-			root = Math.sqrt(numIndiv);
-		}while ((Math.floor(root)-root)!=0);
-		
+		}
 		int numRows = (int) Math.sqrt(numIndiv);//used for later calculations
 		
 		//input validation for choosing infected person
-		do {
-			System.out.println("Please select a person you would like to be infected. It should be be between 0 and " + numIndiv + ".");
+		System.out.println("Please select a person you would like to be infected. It should be be between 0 and the number of individuals specified.");
+		int indexOfInfected = scnr.nextInt();
+		while (indexOfInfected <= 0 || indexOfInfected >= numIndiv) {
+			System.out.println("Please select a person you would like to be infected. It should be be between 0 and the number of individuals specified.");
 			indexOfInfected = scnr.nextInt();
-		}while (indexOfInfected <= 0 || indexOfInfected >= numIndiv);
-		
+		}
 		
 		//user input validation for numSteps (number of steps)
 		int numSteps;
@@ -40,14 +46,14 @@ public class VirusSimulation {
 		// user input validation for alpha (infection rate) 
 		float alpha;
 		do{
-			System.out.println("Enter the rate of infection alpha (must be <= .25): ");
+			System.out.println("Enter the rate of infection alpha (alpha <= .25): ");
 			alpha = scnr.nextFloat();
-		} while (alpha>.25 || alpha < 0);
+		} while (alpha<0 || alpha>.25);
 		
 		// user input validation for beta (recovery rate)
 		float beta;
 		do {
-			System.out.println("Please input the recovery rate. It should be between 0 and 1.(recommended to be lower than infection rate)");
+			System.out.println("Please input the recovery rate. It should be between 0 and 1.");
 			beta = scnr.nextFloat();
 		} while(beta<0 || beta>1);
 		
@@ -63,13 +69,19 @@ public class VirusSimulation {
 				++counter;
 			}
 		}
+		System.out.println("First");
+		for(int i = 0; i < numIndiv; i++) {
+			System.out.print(createdString.charAt(i));
+			if((i+1) % root == 0) {
+				System.out.println("");
+			}
+		}
 		System.out.println("");
 		
 		prevIteration = new StringBuilder(createdString);
 		currentIteration = new StringBuilder(prevIteration);
 		
 		//print the very first iteration only
-		System.out.println("Starting Grid:");
 		try {
 			FileWriter fWriter = new FileWriter("virussim.txt", true);
 			PrintWriter pWriter = new PrintWriter(fWriter);
@@ -119,10 +131,8 @@ public class VirusSimulation {
 		
 		//need this syntax to change individual characters of string
 		int currentRowNum = 1;//declare row number
-		for (int a = 0; a<=numSteps-1;++a) {
-			System.out.println("");
-			System.out.println("Iteration "+(a+1));
-			for (int stringIndex = 1; stringIndex<=numIndiv; ++stringIndex) {//iterate through entire string char by char
+		for (int a = 0; a<numSteps;++a) {
+			for (int stringIndex = 1; stringIndex<=numIndiv; stringIndex++) {//iterate through entire string char by char
 				//check is user is already recovered
 				if (prevIteration.charAt(stringIndex-1)=='R') {
 					if (stringIndex%numRows==0 && stringIndex > 0 && stringIndex<numIndiv) {//increment currentRowNum
@@ -143,59 +153,59 @@ public class VirusSimulation {
 				else if (stringIndex==numRows) {
 					if((testLeft(stringIndex) + testBottom(stringIndex)) > 0) {
 						if(getNumber0to100()<=((100 * alpha) * (testLeft(stringIndex)+testBottom(stringIndex)))) {
-							currentIteration.setCharAt(stringIndex-1,'I');//change corner person's status 
+							currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
 						}
 					}
 				}
-				//check if bottom left corner piece and infected people around them
-				else if (stringIndex==numIndiv-numRows+1) {
+				//check if bottom left corner piece
+				else if (stringIndex==(numIndiv-numRows)+1) {
 					if((testRight(stringIndex) + testTop(stringIndex)) > 0) {
 						if(getNumber0to100() <= ((100 * alpha) * (testRight(stringIndex)+testTop(stringIndex)))) {
-							currentIteration.setCharAt(stringIndex-1,'I');//change corner person's status 
+							currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
 						}	
 					}
 				}
-				//check if bottom right corner piece and infected people around them
+				//check if bottom right corner piece
 				else if (stringIndex==numIndiv) {
 					if((testLeft(stringIndex) + testTop(stringIndex)) > 0) {
 						if(getNumber0to100()<=((100 * alpha) * (testLeft(stringIndex)+testTop(stringIndex)))) {
+							currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
+						}
+					}
+				}
+				//check if right edge piece
+				else if (stringIndex>numRows && stringIndex!=numIndiv && stringIndex%numRows == 0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
+					if((testLeft(stringIndex) + testBottom(stringIndex) + testTop(stringIndex)) > 0) {
+						if(getNumber0to100()<=((100 * alpha) * (testLeft(stringIndex)+testBottom(stringIndex)+testTop(stringIndex)))) {
+							currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
+						}
+					}
+				}
+				//check if left edge piece
+				else if (currentRowNum>1 && stringIndex==(currentRowNum-1)*(numRows)+1 && stringIndex!=numIndiv-numRows+1 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
+					if((testRight(stringIndex) + testBottom(stringIndex) + testTop(stringIndex)) > 0) {
+						if(getNumber0to100()<=((100 * alpha) * (testRight(stringIndex)+testBottom(stringIndex)+testTop(stringIndex)))) {
+							currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
+						} 
+					}
+				}
+				//check for top edge pieces
+				else if (stringIndex < numRows && stringIndex>0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
+					if((testLeft(stringIndex) + testBottom(stringIndex) + testRight(stringIndex)) > 0) {
+						if(getNumber0to100()<=((100 * alpha) * (testBottom(stringIndex)+testLeft(stringIndex)+testRight(stringIndex)))) {
 							currentIteration.setCharAt(stringIndex-1,'I');//change corner person's status 
 						}
 					}
 				}
-				//check if right edge piece and infected people around them
-				else if (stringIndex>numRows && stringIndex!=numIndiv && stringIndex%numRows == 0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
-					if((testLeft(stringIndex) + testBottom(stringIndex) + testTop(stringIndex)) > 0) {
-						if(getNumber0to100()<=((100 * alpha) * (testLeft(stringIndex)+testBottom(stringIndex)+testTop(stringIndex)))) {
-							currentIteration.setCharAt(stringIndex-1,'I');//change right edge person's status 
-						}
-					}
-				}
-				//check if left edge piece and infected people around them
-				else if (currentRowNum>1 && stringIndex==(currentRowNum-1)*(numRows)+1 && stringIndex!=numIndiv-numRows+1 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
-					if((testRight(stringIndex) + testBottom(stringIndex) + testTop(stringIndex)) > 0) {
-						if(getNumber0to100()<=((100 * alpha) * (testRight(stringIndex)+testBottom(stringIndex)+testTop(stringIndex)))) {
-							currentIteration.setCharAt(stringIndex-1,'I');//change left edge person's status 
-						} 
-					}
-				}
-				//check for top edge pieces and infected people around them
-				else if (stringIndex < numRows && stringIndex>0 && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
-					if((testLeft(stringIndex) + testBottom(stringIndex) + testRight(stringIndex)) > 0) {
-						if(getNumber0to100()<=((100 * alpha) * (testBottom(stringIndex)+testLeft(stringIndex)+testRight(stringIndex)))) {
-							currentIteration.setCharAt(stringIndex-1,'I');//change top edge person's status 
-						}
-					}
-				}
-				//check if bottom edge piece and infected people around them
+				//check if bottom edge piece
 				else if (currentRowNum == numRows && stringIndex>((currentRowNum-1)*(numRows)+1) && stringIndex<numIndiv && stringIndex!=1 && stringIndex!=numRows && stringIndex!=numIndiv-numRows+1) {
 					if((testLeft(stringIndex) + testRight(stringIndex) + testTop(stringIndex)) > 0) {	
 						if(getNumber0to100()<=((100 * alpha) *(testTop(stringIndex)+testLeft(stringIndex)+testRight(stringIndex)))) {
-							currentIteration.setCharAt(stringIndex-1,'I');//change bottom edge person's status 
+							currentIteration.setCharAt(stringIndex-1,'I');//change corner person's status 
 						}
 					}
 				}
-				//all inside people and check if infected people around them
+				//all inside people
 				else {
 					if((testLeft(stringIndex) + testBottom(stringIndex) + testTop(stringIndex) + testRight(stringIndex)) > 0) {
 						if(getNumber0to100()<=((100 * alpha) * (testLeft(stringIndex)+testRight(stringIndex)+testBottom(stringIndex)+testTop(stringIndex)))) {
@@ -229,7 +239,9 @@ public class VirusSimulation {
 				}
 			}
 			System.out.println("");
-
+			
+			
+			
 			try {
 				FileWriter fWriter2 = new FileWriter("virussim.txt", true);
 				PrintWriter pWriter2 = new PrintWriter(fWriter2);
@@ -237,6 +249,7 @@ public class VirusSimulation {
 				int recovNum = 0;
 				int susNum = 0;
 				int gcd = numIndiv;
+				pWriter2.println("Step " + (a+1) + ":");
 				for (int k= 0;k<numIndiv;k++) {
 					if(currentIteration.charAt(k)=='I') {
 						infecNum++;
@@ -247,6 +260,7 @@ public class VirusSimulation {
 					if(currentIteration.charAt(k)=='S') {
 						susNum++;
 					}
+					
 					pWriter2.print(currentIteration.charAt(k));
 					if ((k+1)%root == 0) {
 						
@@ -302,8 +316,7 @@ public class VirusSimulation {
 		}
 		public static int testBottom(int stringIndex) {
 			int isInfected = 0;
-			//System.out.println(stringIndex);
-			if(prevIteration.charAt(stringIndex-1 +(int)root)=='I') {
+			if(prevIteration.charAt(stringIndex-1+(int)root)=='I') {
 				isInfected = 1;
 			}
 			return isInfected;
@@ -316,7 +329,5 @@ public class VirusSimulation {
 	        return (int) (min + (Math.random() * (max - min)));
 	        //return 0;
 		}
-
-	}
-
-
+		
+}
