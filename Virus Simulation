@@ -368,10 +368,11 @@ public class VirusSimulation {
 			for (int stringIndex = 1; stringIndex<=numIndiv; stringIndex++) {//iterate through entire string char by char
 				//check is user is already recovered
 				if (prevIteration.charAt(stringIndex-1)=='R') {
+					
 				}
 				
 				//check if top left corner piece
-				if (stringIndex==1) {
+				else if (stringIndex==1) {
 					if((testRight(stringIndex) + testBottom(stringIndex)) > 0) {
 						if(getNumber0to100() <= ((alpha * 100) * (testRight(stringIndex) + testBottom(stringIndex)))) {
 							currentIteration.setCharAt(stringIndex-1,'I'); //change corner person's status 
