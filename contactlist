@@ -1,1 +1,49 @@
 
+import java.util.Scanner; 
+
+public class LabProgram {
+   
+   public static String getPhoneNumber(String nameArr[], String [] phoneNumberArr, String contactName, int arraySize){
+        String contactNameNum = "";
+        //iterate through array holding names
+        for (int i = 0; i<arraySize; ++i){
+           //if contact string is equal to one of the names in the name array, retrieve the corespoding phone 
+           //from phone number array 
+              if (nameArr[i].equals(contactName)){
+               contactNameNum = phoneNumberArr[i];
+              }
+        }
+        return contactNameNum;
+   }
+   
+   public static void main(String[] args) {
+      
+      //getting inputs and declaring arrays to hold contact info
+      Scanner scnr = new Scanner(System.in);
+      int numPairs = scnr.nextInt();
+      String name = "";
+      String phoneNum = "";
+      String [] nameList = new String [numPairs];
+      String [] phoneNumList = new String [numPairs];
+      
+      //individually take in user inputs and put them into corresponding arrays
+      //use same index for corresponding pairs to help later when retrieving desires phone number given contact name
+      for (int i=0; i<numPairs; ++i){
+         String namePhoneNum = scnr.next();
+         name = namePhoneNum.replaceAll("[^A-Za-z]", "");
+         phoneNum = namePhoneNum.replaceAll("[^0-9 -]","");
+         nameList[i] = name;
+         phoneNumList [i] = phoneNum;
+      }
+      
+      //get last string from user input 
+      String userInput = scnr.next();
+      
+      String contactNum = getPhoneNumber(nameList, phoneNumList, userInput, numPairs);
+      if (contactNum.equals("")){
+         System.out.println("None");
+      }else{
+         System.out.println(contactNum);
+      }
+   }
+}
