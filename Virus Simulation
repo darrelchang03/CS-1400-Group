@@ -83,6 +83,7 @@ public class VirusSimulation {
 		
 		//print the very first iteration only
 		try {
+			//create a file named virussim if it doesn't exist already, if it exists then append to it
 			FileWriter fWriter = new FileWriter("virussim.txt", true);
 			PrintWriter pWriter = new PrintWriter(fWriter);
 			int infecNum = 0;
@@ -92,14 +93,18 @@ public class VirusSimulation {
 			pWriter.println("This is what the grid will start as.");
 			for (int k= 1;currentIteration.length()>=k;++k) {
 				if(currentIteration.charAt(k-1)=='I') {
+					//count number of infected
 					infecNum++;
 				}
 				if(currentIteration.charAt(k-1)=='R') {
+					//count number of recovered
 					recovNum++;
 				}
 				if(currentIteration.charAt(k-1)=='S') {
+					//count number of susceptible
 					susNum++;
 				}
+				//print out grid
 				System.out.print(currentIteration.charAt(k-1));
 				pWriter.print(currentIteration.charAt(k-1));
 				if (k%numRows == 0 && k>0) {
@@ -107,6 +112,7 @@ public class VirusSimulation {
 					pWriter.println("");
 				}
 			}
+			//find the greatest common denominator for the ratio
 			int num1 = infecNum;
 			int num2 = numIndiv;
 			while (num1 != num2) {
@@ -243,6 +249,7 @@ public class VirusSimulation {
 			
 			
 			try {
+				//append to virussim
 				FileWriter fWriter2 = new FileWriter("virussim.txt", true);
 				PrintWriter pWriter2 = new PrintWriter(fWriter2);
 				int infecNum = 0;
@@ -252,21 +259,25 @@ public class VirusSimulation {
 				pWriter2.println("Step " + (a+1) + ":");
 				for (int k= 0;k<numIndiv;k++) {
 					if(currentIteration.charAt(k)=='I') {
+						//count number of infected
 						infecNum++;
 					}
 					if(currentIteration.charAt(k)=='R') {
+						//count number of recovered
 						recovNum++;
 					}
 					if(currentIteration.charAt(k)=='S') {
+						//count number of susceptible
 						susNum++;
 					}
-					
+					//print out the grid
 					pWriter2.print(currentIteration.charAt(k));
 					if ((k+1)%root == 0) {
 						
 						pWriter2.println("");
 					}
 				}
+				//get the greatest common denominator for the ratio
 				int num1 = infecNum;
 				int num2 = numIndiv;
 				while ((num1 != num2) && (num1 != 0)) {
