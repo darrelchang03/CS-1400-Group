@@ -1,0 +1,83 @@
+*****************Exact Change***********************
+import java.util.Scanner; 
+
+public class LabProgram {
+   
+   public static void exactChange(int userTotal, int[] coinVals){
+      coinVals[3] = userTotal/25;
+      int remainingVal = userTotal%25;
+      coinVals [2] = remainingVal/10;
+      remainingVal = remainingVal%10;
+      coinVals [1] = remainingVal/5;
+      remainingVal = remainingVal%5;
+      coinVals [0] = remainingVal;
+      if (userTotal <=0){
+         System.out.println("no change");
+         System.exit(0);
+      }
+      if (coinVals[0]==1){
+         System.out.println(coinVals[0] + " penny");
+      } else if (coinVals[0] > 1){
+         System.out.println(coinVals[0] + " pennies");
+      }
+      if (coinVals[1]==1){
+         System.out.println(coinVals[1] + " nickel");
+      } else if (coinVals[1] > 1){
+         System.out.println(coinVals[1] + " nickels");
+      }
+      if (coinVals[2]==1){
+         System.out.println(coinVals[2] + " dime");
+      } else if (coinVals[2] > 1){
+         System.out.println(coinVals[2] + " dimes");
+      }
+      if (coinVals[3]==1){
+         System.out.println(coinVals[3] + " quarter");
+      } else if (coinVals[3] > 1){
+         System.out.println(coinVals[3] + " quarters");
+      }
+   }
+   
+   public static void main(String[] args) {
+      Scanner scnr = new Scanner(System.in);
+      int userInput = scnr.nextInt();
+      int [] coinVals = new int [4];
+      /*coinVals[3] = userInput/25;
+      int remainingVal = userInput%25;
+      coinVals [2] = remainingVal/10;
+      remainingVal = remainingVal%10;
+      coinVals [1] = remainingVal/5;
+      remainingVal = remainingVal%5;
+      coinVals [0] = remainingVal;*/
+      exactChange(userInput, coinVals);
+   }
+}
+
+************************Reverse Binary************************************
+import java.util.Scanner; 
+
+public class LabProgram {
+   public static String reverseBinary = "";
+   public static String binary = "";
+   
+   public static String intToReverseBinary(int integerValue){
+      while(integerValue >0){
+         reverseBinary = reverseBinary + (integerValue%2);
+         integerValue = integerValue/2;
+      }
+      return reverseBinary;
+   }
+   
+   public static String stringReverse(String inputString){
+      for (int i=inputString.length()-1; i>=0; --i){
+         binary = binary + reverseBinary.charAt(i);
+      }
+      return binary;
+   }
+   
+   public static void main(String[] args) {
+      Scanner scnr = new Scanner(System.in);
+      int userInput = scnr.nextInt();
+      String binaryReverse = intToReverseBinary(userInput);
+      System.out.println(stringReverse(binaryReverse));
+   }
+}
