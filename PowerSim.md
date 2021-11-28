@@ -296,7 +296,7 @@ public class ApplianceGenerator {
 	public static ArrayList<ArrayList>appsByArea = new ArrayList<ArrayList>();
 	public static void addAppliance(long myLocation, String myName, int myWatt, double myProb, boolean myIsSmart, double mySmartProb) {
 		for(int i=0; i<appsByArea.size();++i) {
-			if(appsList.get(i).getAppLocation() == 10000000+myLocation) {
+			if(appsList.get(i).getAppLocation() == 10000000 + myLocation) {
 				appsList.add(i,new GeneratedAppliance(myLocation, myName, myWatt, myProb, myIsSmart, mySmartProb));
 			}
 		}
