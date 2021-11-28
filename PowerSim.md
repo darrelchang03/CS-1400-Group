@@ -6,14 +6,15 @@ package buildingSim;
 /* This is a stub code. You can modify it as you wish. */
 
 import java.io.*;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
+import java.util.StringTokenizer;
+
 import buildingSim.ApplianceGenerator.Appliance;
 
-class AppClient extends GeneratedAppliance{
+class AppClient {
 	
 	public void readAppFile(String file){ // method to read the comma seperated appliance file.
 		Scanner scan;
@@ -38,7 +39,43 @@ class AppClient extends GeneratedAppliance{
 			
 		}
 	}
-	
+	public static List<List<GeneratedAppliance>> addAppsFromFile(String fileName){
+		List<GeneratedAppliance> apps = new ArrayList<GeneratedAppliance>();
+		List<List<GeneratedAppliance>>appsByArea = new ArrayList<List<GeneratedAppliance>>();
+		List<GeneratedAppliance> tempList = new ArrayList<GeneratedAppliance>();
+		Long prevAppLocation = (long)10000001;
+		try(Scanner scnr = new Scanner(new File (fileName))){
+			while (scnr.hasNext()) {
+				//add to arrayList
+				StringTokenizer stringToken = new StringTokenizer(scnr.nextLine());
+				Long currentAppLocation = Long.parseLong(stringToken.nextToken(","));
+				String appName = stringToken.nextToken(",");
+				int onWatt = Integer.parseInt(stringToken.nextToken(","));
+				double probOn = Double.parseDouble(stringToken.nextToken(","));
+				boolean isSmart = Boolean.parseBoolean(stringToken.nextToken(","));
+				double smartProb = Double.parseDouble(stringToken.nextToken());
+				if (currentAppLocation-prevAppLocation!=0 || currentAppLocation == 10000100) {
+					for(int i=0; i<tempList.size();++i) {
+						System.out.println(tempList.get(i).getAppName());
+						System.out.println();
+					}
+					appsByArea.add(tempList);
+					tempList.clear();
+					
+				}
+				tempList.add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
+				apps.add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
+				
+				prevAppLocation = currentAppLocation;
+				
+				
+			}			
+		}catch (IOException e) {
+			System.out.println(e);
+		}
+		
+		return appsByArea;
+	}
 	
 	public static void main(String []args){
 		boolean correct = false;
@@ -49,9 +86,14 @@ class AppClient extends GeneratedAppliance{
 		double probOn = 0.0;
 		boolean ifSmart = false;
 		double smartProb = 0.0;
+		// 1D and 2D arrayList for sorting and searching Appliances
+		List<GeneratedAppliance> appsList;
+		List<List<GeneratedAppliance>> appsByArea;
 		
 		AppClient app = new AppClient();
 		//User interactive part
+		appsByArea = addAppsFromFile("app.txt");
+		
 		String option1, option2;
 		Scanner scnr = new Scanner(System.in);
 		while(true){// Application menu to be displayed to the user.
@@ -83,9 +125,9 @@ class AppClient extends GeneratedAppliance{
 					try{
 						do {
 							correct = true;
-							System.out.println("Please enter the \"off\" wattage.");
-							offWatt = scnr.nextInt();
-						}while(offWatt<0);
+							System.out.println("Please enter the location(1-100 inclusive) of the new appliance.");
+							appLocation = scnr.nextInt();
+						}while(appLocation<1 || appLocation>100);
 					}catch(InputMismatchException e) {
 						scnr.nextLine();
 						System.out.println(e);
@@ -153,10 +195,10 @@ class AppClient extends GeneratedAppliance{
 				}while (!correct);
 				//write new appliance to file to "create" it
 				try
-				{
+				{//	NOTE TO SELF:  MAKE IT PRINT WITH SAME AREA CODE ITEMS
 					FileWriter fw = new FileWriter( "app.txt", true);
 					BufferedWriter bw = new BufferedWriter( fw );
-					bw.write(appLocation + ",");
+					bw.write((appLocation + 10000000) + ",");
 					bw.write(appName + ",");
 					bw.write(onWatt + ",");
 					bw.write(probOn + ",");
@@ -164,7 +206,7 @@ class AppClient extends GeneratedAppliance{
 					bw.write(String.valueOf(smartProb));
 					bw.newLine();
 					bw.flush();
-					ApplianceGenerator.addAppliance(appLocation, appName, onWatt, probOn, ifSmart, smartProb);
+					
 					System.out.println("Item successfully added to inventory!");
 					
 				}
@@ -173,17 +215,13 @@ class AppClient extends GeneratedAppliance{
 					ioe.printStackTrace( );
 				}
 			}
-			
-			if (option1.equals("B")) {
-				
-				
-				//NOTE TO SELF: CHANGE THE USER VERIFICATIONS TO FIT CONTEXTS OF THE DELETE FILE************
-				
+		//create menu option delete appliance
+			if (option1.equals("D")) {
 				
 				do {//check user input for name
 					try {
 						correct = true;
-						System.out.println("Please enter the name of the appliance you would like to add.");
+						System.out.println("Please enter the name of the appliance you would like to delete.");
 						appName = scnr.nextLine();
 					}catch(InputMismatchException e) {
 						scnr.nextLine();
@@ -196,9 +234,9 @@ class AppClient extends GeneratedAppliance{
 					try{
 						do {
 							correct = true;
-							System.out.println("Please enter the \"off\" wattage.");
-							offWatt = scnr.nextInt();
-						}while(offWatt<0);
+							System.out.println("Please enter the location(1-100 inclusive) of the new appliance.");
+							appLocation = scnr.nextInt();
+						}while(appLocation<1 || appLocation>100);
 					}catch(InputMismatchException e) {
 						scnr.nextLine();
 						System.out.println(e);
@@ -210,7 +248,7 @@ class AppClient extends GeneratedAppliance{
 					try{
 						do{
 							correct = true;
-							System.out.println("Please enter the \"on\" wattage.");
+							System.out.println("Please enter the \"on\" wattage of the item you would like to delete.");
 							onWatt = scnr.nextInt();
 						}while (onWatt<0);
 					}catch(InputMismatchException e) {
@@ -224,7 +262,7 @@ class AppClient extends GeneratedAppliance{
 					try{
 						do {
 							correct = true;
-							System.out.println("Please enter the probability(0-1 inclusive) that the appliance will turn on.");
+							System.out.println("Please enter the \"on\" probability(0-1 inclusive) of the item you would like to delete.");
 							probOn = scnr.nextDouble();
 						}while(probOn>1 || probOn<0);
 					}catch(InputMismatchException e) {
@@ -237,14 +275,14 @@ class AppClient extends GeneratedAppliance{
 				do { //check user input
 					try{
 						correct = true;
-						System.out.println("Please specify if the appliance will be \"smart\" (true or false).");
+						System.out.println("Please specify the \"smart\" factor(true or false) of the appliance you would like to delete.");
 						ifSmart = scnr.nextBoolean();
 						if (ifSmart) {
 							do { //check user input
 								try { 
 									do {
 									correct = true;
-									System.out.println("Please enter the power cut rate(0-1 inclusive) on the appliance when it is in low power mode.");
+									System.out.println("Please enter the power cut rate(0-1 inclusive) of the appliance that you would like to delete.");
 									smartProb = scnr.nextDouble();
 									}while(smartProb>1 || smartProb<0);
 								}catch(InputMismatchException e) {
@@ -264,24 +302,18 @@ class AppClient extends GeneratedAppliance{
 						correct = false;
 					}
 				}while (!correct);
-				for (int i=0; i < ApplianceGenerator.getAppsSize();++i) {
-					for (int j=0;j<ApplianceGenerator.getAppsByArea().get(i).size();++j) {
-						if (((GeneratedAppliance) ApplianceGenerator.getAppsByArea().get(i).get(j)).getAppName().equals(appName)) {
-							
-						}
-					}
-				}
-				
+
 			}
+			
 		}
 
 	}
 }
 
-----------------------------------------------------------ApplianceGeneratorClass--------------------------------------------
-******Changed the app[] array to an arrayList so that we can add appliance to the list without limit*****
+----------------------------------------------------------ApplianceGeneratorClass---------------------------------
 
 package buildingSim;
+
 import java.util.*;
 import java.util.StringTokenizer;
 import java.io.File;
@@ -289,109 +321,89 @@ import java.io.IOException;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 
-
 public class ApplianceGenerator {
 	public Scanner scnr = new Scanner(System.in);
-	public static ArrayList<GeneratedAppliance>appsList = new ArrayList<GeneratedAppliance>();
-	public static ArrayList<ArrayList>appsByArea = new ArrayList<ArrayList>();
-	public static void addAppliance(long myLocation, String myName, int myWatt, double myProb, boolean myIsSmart, double mySmartProb) {
-		for(int i=0; i<appsByArea.size();++i) {
-			if(appsList.get(i).getAppLocation() == 10000000 + myLocation) {
-				appsList.add(i,new GeneratedAppliance(myLocation, myName, myWatt, myProb, myIsSmart, mySmartProb));
-			}
-		}
-	}
-	public static ArrayList<ArrayList> getAppsByArea(){
-		return appsByArea;
-	}
-	public static double getAppsSize() {
-		return appsByArea.size();
-	}
 	
 	public static class Appliance {
 		public String name;
-		public int onW, offW; 
-		public double probOn; 
-		public boolean smart; 
+		public int onW, offW;
+		public double probOn;
+		public boolean smart;
 		public double probSmart;
-		
 
-		public Appliance (String n, int on, int off, double pOn, boolean s, double pSmart)
-		{ name=n; onW=on; offW=off; probOn=pOn; smart=s; probSmart=pSmart; }
+		public Appliance(String n, int on, int off, double pOn, boolean s, double pSmart) {
+			name = n;
+			onW = on;
+			offW = off;
+			probOn = pOn;
+			smart = s;
+			probSmart = pSmart;
+		}
 
-		public String toString () {
+		public String toString() {
 			return name + "," + onW + "," + offW + "," + probOn + "," + smart + "," + probSmart;
 		}
 	}
 
-	public static void main( String [] args ) throws IOException {
-		Appliance [] appTypes = new Appliance[100];  // default 100 possible appliance types
-		File inputFile = new File( "ApplianceDetail.txt" );
-		Scanner scan = new Scanner( inputFile );
-		int count=0;
-		while ( scan.hasNext( ) ) {
+	public static void main(String[] args) throws IOException {
+		Appliance[] appTypes = new Appliance[100]; // default 100 possible appliance types
+		File inputFile = new File("ApplianceDetail.txt");
+		Scanner scan = new Scanner(inputFile);
+		int count = 0;
+		while (scan.hasNext()) {
 			StringTokenizer stringToken = new StringTokenizer(scan.nextLine());
-			appTypes[count] = (new Appliance(stringToken.nextToken(","),
-					Integer.parseInt(stringToken.nextToken(",")),
-					Integer.parseInt(stringToken.nextToken(",")),
-					Double.parseDouble(stringToken.nextToken(",")),
-					Boolean.parseBoolean(stringToken.nextToken(",")),
-					Double.parseDouble(stringToken.nextToken())));
+			appTypes[count] = (new Appliance(stringToken.nextToken(","), 									Integer.parseInt(stringToken.nextToken(",")),
+					Integer.parseInt(stringToken.nextToken(",")), 									Double.parseDouble(stringToken.nextToken(",")),
+					Boolean.parseBoolean(stringToken.nextToken(",")), 								Double.parseDouble(stringToken.nextToken())));
 			count++;
 		}
-/*
-output a comma delimited file
-the location (represented by an 8 digit numeric account number)
-type (string)
-"on" wattage used (integer)
-probability (floating point, i.e..01=1%) that the appliance is "on" at any time
-smart (boolean) 
-Smart appliances (if "on") power reduction percent when changed to "low" status(floating point, i.e..33=33%).
-*/
-		try
-		{
-			ArrayList<GeneratedAppliance> tempAppsList = new ArrayList<GeneratedAppliance>();
-			FileWriter fw = new FileWriter( "app.txt", false);
-			BufferedWriter bw = new BufferedWriter( fw );
-			for (long location=1;location<=100 ;location++ ) {// default 100 locations
-				int applianceCount=(int)(Math.random()*6)+15;  //15-20 appliances per location 
-				for (int i=1;i<=applianceCount;i++ ){
-					int index=(int)(Math.random()*count);  // pick an appliance randomly
-					bw.write(String.valueOf(10000000+location));
-					bw.write( "," );		
+		/*
+		 * output a comma delimited file the location (represented by an 8 digit numeric
+		 * account number) type (string) "on" wattage used (integer) probability
+		 * (floating point, i.e..01=1%) that the appliance is "on" at any time smart
+		 * (boolean) Smart appliances (if "on") power reduction percent when changed to
+		 * "low" status(floating point, i.e..33=33%).
+		 */
+		try {
+			FileWriter fw = new FileWriter("app.txt", false);
+			BufferedWriter bw = new BufferedWriter(fw);
+			for (long location = 1; location <= 100; location++) {// default 100 locations
+				List<GeneratedAppliance> tempList = new ArrayList<GeneratedAppliance>();
+				int applianceCount = (int) (Math.random() * 6) + 15; // 15-20 appliances per location
+				for (int i = 1; i <= applianceCount; i++) {
+					int index = (int) (Math.random() * count); // pick an appliance randomly
+					bw.write(String.valueOf(10000000 + location));
+					bw.write(",");
 					bw.write(appTypes[index].name);
-					bw.write( "," );		
+					bw.write(",");
 					bw.write(String.valueOf(appTypes[index].onW));
-					bw.write( "," );									
+					bw.write(",");
 					bw.write(String.valueOf(appTypes[index].probOn));
-					bw.write( "," );		
+					bw.write(",");
 					bw.write(String.valueOf(appTypes[index].smart));
-					bw.write( "," );
+					bw.write(",");
 					bw.write(String.valueOf(appTypes[index].probSmart));
-					bw.newLine( );
+					bw.newLine();
 					bw.flush();
-					tempAppsList = new ArrayList<GeneratedAppliance>();
-					tempAppsList.add(new GeneratedAppliance((10000000+location),
-														appTypes[index].name,
-														appTypes[index].onW,
-														appTypes[index].probOn,
-														appTypes[index].smart,
-														appTypes[index].probSmart));
-					bw.close();
-					fw.close();
+					
+					/*
+					 * addAppliance((10000000 + location), appTypes[index].name,
+					 * appTypes[index].onW, appTypes[index].probOn, appTypes[index].smart,
+					 * appTypes[index].probSmart); tempList.add(new GeneratedAppliance((10000000 +
+					 * location), appTypes[index].name, appTypes[index].onW, appTypes[index].probOn,
+					 * appTypes[index].smart, appTypes[index].probSmart));
+					 */
+					
 				}
-				appsByArea.add(tempAppsList);
+				//appsByArea.add(tempList);
 			}
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
 		}
-		catch( IOException ioe )
-		{
-			ioe.printStackTrace( );
-		}  
 	}
-}
 	
 	
----------------------------------------------------------GeneratedAppliance Class--------------------------------------------
+---------------------------------------------------------GeneratedAppliance Class---------------------------------
 package buildingSim;
 
 public class GeneratedAppliance {
@@ -401,6 +413,15 @@ public class GeneratedAppliance {
 	private double probOn;
 	private boolean isSmart;
 	private double smartProb;
+	
+	public  GeneratedAppliance(){
+		this.appLocation = 0;
+		this.appName = "";
+		this.onWatt = 0;
+		this.probOn = 0.0;
+		this.isSmart = false;
+		this.smartProb = 0.0;
+	}
 	
 	public GeneratedAppliance (long myLocation, String myName, int myWatt, double myProb, boolean myIsSmart, double mySmartProb) {
 		setAppLocation(myLocation);	setAppName(myName);	setOnWatt(myWatt);	setProbOn(myProb);	setIsSmart(myIsSmart);	setSmartProb(mySmartProb);
@@ -444,3 +465,4 @@ public class GeneratedAppliance {
 		return this.smartProb;
 	}
 }
+
