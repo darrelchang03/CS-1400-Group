@@ -50,8 +50,8 @@ class AppClient {
 		{
 		    for (int j = 0; j < appsByArea.get(i).size(); j++)
 		    {
-		    	if(appsByArea.get(i).get(j).getIsOn()) {
-		    	sumWatts += appsByArea.get(i).get(j).getOnWatt();
+		    	if(appsByArea.get(i).get(j).getIsOn()) { //check if the appliance is on
+		    	sumWatts += appsByArea.get(i).get(j).getOnWatt(); //if so then add its wattage to sumWatts
 		    			}
 		        	}
 		    	}
