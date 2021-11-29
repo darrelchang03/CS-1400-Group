@@ -36,41 +36,41 @@ public class AppClient {
 	}
 	//create 2D array for appliances(each row represents one area)
 	public static List<List<GeneratedAppliance>> addAppsFromFile(String fileName){
-		List<GeneratedAppliance> apps = new ArrayList<GeneratedAppliance>();
-		List<List<GeneratedAppliance>>appsByArea = new ArrayList<List<GeneratedAppliance>>();
-		Long prevAppLocation = (long)10000001;
-		int counter = 0;
-		appsByArea.add(new ArrayList<GeneratedAppliance>());
-		try(Scanner scnr = new Scanner(new File (fileName))){
-			while (scnr.hasNext()) {
-				//add to arrayList
-				StringTokenizer stringToken = new StringTokenizer(scnr.nextLine());
-				Long currentAppLocation = Long.parseLong(stringToken.nextToken(","));
-				String appName = stringToken.nextToken(",");
-				int onWatt = Integer.parseInt(stringToken.nextToken(","));
-				double probOn = Double.parseDouble(stringToken.nextToken(","));
-				boolean isSmart = Boolean.parseBoolean(stringToken.nextToken(","));
-				double smartProb = Double.parseDouble(stringToken.nextToken());
-				if (currentAppLocation-prevAppLocation==1) {
-					++counter;
-					appsByArea.add(new ArrayList<GeneratedAppliance>());
-					appsByArea.get(counter).add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
-				}else{
-					appsByArea.get(counter).add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
-				}
-				apps.add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
-				prevAppLocation = currentAppLocation;
+	List<GeneratedAppliance> apps = new ArrayList<GeneratedAppliance>();
+	List<List<GeneratedAppliance>>appsByArea = new ArrayList<List<GeneratedAppliance>>();
+	Long prevAppLocation = (long)10000001;
+	int counter = 0;
+	appsByArea.add(new ArrayList<GeneratedAppliance>());
+	try(Scanner scnr = new Scanner(new File (fileName))){
+		while (scnr.hasNext()) {
+			//add to arrayList
+			StringTokenizer stringToken = new StringTokenizer(scnr.nextLine());
+			Long currentAppLocation = Long.parseLong(stringToken.nextToken(","));
+			String appName = stringToken.nextToken(",");
+			int onWatt = Integer.parseInt(stringToken.nextToken(","));
+			double probOn = Double.parseDouble(stringToken.nextToken(","));
+			boolean isSmart = Boolean.parseBoolean(stringToken.nextToken(","));
+			double smartProb = Double.parseDouble(stringToken.nextToken());
+			if (currentAppLocation-prevAppLocation==1) {
+				++counter;
+				appsByArea.add(new ArrayList<GeneratedAppliance>());
+				appsByArea.get(counter).add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
+			}else{
+				appsByArea.get(counter).add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
 			}
+			apps.add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
+			prevAppLocation = currentAppLocation;
+		}
 		}catch (IOException e) {
 			System.out.println(e);
 		}
 		return appsByArea;
 	}
-
+	
 	public static void main(String []args){
-		boolean correct = false;
-		String appName = "";
-		long appLocation = 0;
+	boolean correct = false;
+	String appName = "";
+	long appLocation = 0;
 		int onWatt = 0;
 		int offWatt = 0;
 		double probOn = 0.0;
@@ -215,11 +215,10 @@ public class AppClient {
 			}
 		//create menu option delete appliance
 			if (option1.equals("D")) {
-				
 				do {//check user input for name
 					try {
 						correct = true;
-						System.out.println("Please enter the name of the appliance you would like to delete.");
+						System.out.println("Please enter the name of the appliance you would like to delete(CASE SENSATIVE).");
 						appName = scnr.nextLine();
 					}catch(InputMismatchException e) {
 						scnr.nextLine();
@@ -300,34 +299,55 @@ public class AppClient {
 						correct = false;
 					}
 				}while (!correct);
-				
-				if (option1.equals("F")) {
-					try {
-						String file;
-						File myFile=new File(file);
-						Scanner scan = new Scanner(myFile);//each line has the format
-						//locationID,name of app,onPower,probability of staying on, smart or not,Smart appliances (if "on") power reduction percent when changed to "low" status(floating point, i.e..33=33%).
-						String str;
-						int locationID;
-						int onPower;
-						String appType;
-						int lowPower;
-						Appliance aAppl;
-						while(scan.hasNextLine()) {
-							scan.useDelimiter(",");
-							locationID = scan.nextInt();
-							appName = scan.next();
-							onPower = scan.nextInt();
-							probOn = scan.nextFloat();
-							appType = scan.next();
-							lowPower = scan.nextInt();
-							List.add(new Appliance(locationID, appName, onPower, probOn, appType, lowPower)); // creates an object Appliance with file defined attributes values in the arraylist List (doesnt work until Arraylist code is fixed)
-						}		
-						scan.close();
-					}catch(IOException ioe){ 
-						System.out.println("The file can not be read");
+				//iterate through array and compare each appliance attributes to user input
+				boolean itemFound = false;
+				for (int i=0; i < appsByArea.size();++i) {
+					for (int j=0;j<appsByArea.get(i).size();++j) {
+						long deleteLocation = appsByArea.get(i).get(j).getAppLocation();
+						String deleteName = appsByArea.get(i).get(j).getAppName();
+						int deleteWatt = appsByArea.get(i).get(j).getOnWatt();
+						double deleteProbOn = appsByArea.get(i).get(j).getOnProb();
+						boolean deleteSmart = appsByArea.get(i).get(j).getIsSmart();
+						double deleteSmartProb = appsByArea.get(i).get(j).getSmartProb();
+						if (deleteLocation==appLocation+10000000 && 
+							deleteName.equals(appName) && 
+							deleteWatt==onWatt && 
+							deleteProbOn==probOn && 
+							String.valueOf(deleteSmart).equals(String.valueOf(ifSmart)) && 
+							deleteSmartProb==smartProb) {
+							appsByArea.get(i).remove(j);
+							itemFound = true;
+						}
 					}
 				}
+				
+				try
+				{//	print new file with added appliance for reference
+					FileWriter fw = new FileWriter( "app.txt", false);
+					BufferedWriter bw = new BufferedWriter( fw );
+					for (int i=0; i < appsByArea.size();++i) {
+						for (int j=0;j<appsByArea.get(i).size();++j) {
+							bw.write((appsByArea.get(i).get(j).getAppLocation()) + ",");
+							bw.write(appsByArea.get(i).get(j).getAppName() + ",");
+							bw.write(appsByArea.get(i).get(j).getOnWatt() + ",");
+							bw.write(appsByArea.get(i).get(j).getOnProb() + ",");
+							bw.write(appsByArea.get(i).get(j).getIsSmart() + ",");
+							bw.write(String.valueOf(appsByArea.get(i).get(j).getSmartProb()));
+							bw.newLine();
+							bw.flush();
+						}
+					}
+					if (!itemFound) {
+						System.out.println("Item not found. Please check inputs and try again.");
+					}else {
+						System.out.println("Item successfully deleted from inventory!");
+					}
+				}
+				catch(IOException ioe)
+				{
+					ioe.printStackTrace( );
+				}
+			}
 
 			}
 			
