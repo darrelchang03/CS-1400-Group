@@ -371,14 +371,15 @@ class AppClient {
 			}
 			if (option1.equals("L")) {
 				try {
-					File readFile = new File ("appList.txt");
+					//reads the app.txt file and creates a new file to output the list
+					File readFile = new File ("app.txt");
 					Scanner inputFile = new Scanner(readFile);
 					FileWriter fw = new FileWriter("applist.txt", true);
 					PrintWriter pw = new PrintWriter(fw);
-					int count = 1;
 					System.out.println("Here are the current appliances:");
 					pw.println("Here are the current appliances:");
 					while (inputFile.hasNext()) {
+					//each line in app.txt is read, stored into outputText, then reformatted for better visibility
 						String outputText = "";
 						String fileText = inputFile.nextLine();
 						if (fileText.contains(",")) {
@@ -393,9 +394,9 @@ class AppClient {
 							int five = fileText.indexOf(",", four+1);
 							outputText += "Power cut rate: " + fileText.substring(fileText.indexOf(",", four+1)+1) + "\n";
 						}
+					//outputText is outputted onto both the console and applist.txt
 						System.out.println(outputText);
 						pw.println(outputText);
-						count++;
 					}
 					pw.close();
 				} catch (IOException e) {
@@ -429,6 +430,12 @@ class AppClient {
 				}catch(IOException ioe){ 
 					System.out.println("The file can not be read");
 				}
+			}
+			
+			//create menu option to quit program
+			if (option1.equals("Q")) {
+				System.out.println("Program has ended.");
+				System.exit(0);
 			}
 		}
 
