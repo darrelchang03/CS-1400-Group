@@ -44,7 +44,7 @@ class AppClient {
 			System.out.println("The file can not be read");
 		}
 	}
-	public int sumWattages(List<List<GeneratedAppliance>> appsByArea) {
+	public static int sumWattages(List<List<GeneratedAppliance>> appsByArea) {
 		int sumWatts = 0;
 		for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist
 		{
@@ -468,7 +468,7 @@ class AppClient {
 				System.exit(0);
 			}
 			if (option1.equals("S")) {	
-				while(sumWattages>allowedWattage) {
+				while(sumWattages(appsByArea)>allowedWattage) {
 				int highestSmartWattage = 0;
 				
 				for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to find the smart appliance with the highest wattage
