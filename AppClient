@@ -348,6 +348,41 @@ public class AppClient {
 					ioe.printStackTrace( );
 				}
 			}
+			// create menu option list appliance(s)
+			if (option1.equals("L")) {
+				try {
+					File readFile = new File ("app.txt");
+					Scanner inputFile = new Scanner(readFile);
+					FileWriter fw = new FileWriter("applist.txt", true);
+					PrintWriter pw = new PrintWriter(fw);
+					int count = 1;
+					System.out.println("Here are the current appliances:");
+					pw.println("Here are the current appliances:");
+					while (inputFile.hasNext()) {
+						String outputText = "";
+						String fileText = inputFile.nextLine();
+						if (fileText.contains(",")) {
+							outputText += "Location: " + fileText.substring(0, fileText.indexOf(",")) + "\n";
+							outputText += "Name: " + fileText.substring(fileText.indexOf(",")+1, fileText.indexOf(",", fileText.indexOf(",")+1)) + "\n";
+							int two = fileText.indexOf(",", fileText.indexOf(",")+1);
+							outputText += "Wattage: " + fileText.substring(fileText.indexOf(",", fileText.indexOf(",")+1)+1, fileText.indexOf(",", two + 1)) + "\n";
+							int three = fileText.indexOf(",", two + 1);
+							outputText += "Probability to turn on: " + fileText.substring(fileText.indexOf(",", two + 1)+1, fileText.indexOf(",", three+1)) + "\n";
+							int four = fileText.indexOf(",", three+1);
+							outputText += "Smart Appliance: " + fileText.substring(fileText.indexOf(",", three+1)+1, fileText.indexOf(",", four+1)) + "\n";
+							int five = fileText.indexOf(",", four+1);
+							outputText += "Power cut rate: " + fileText.substring(fileText.indexOf(",", four+1)+1) + "\n";
+						}
+						System.out.println(outputText);
+						pw.println(outputText);
+						
+						count++;
+					}
+					pw.close();
+				} catch (IOException e) {
+					System.out.println("File not found");
+				}
+			}
 
 			}
 			
