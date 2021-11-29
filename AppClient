@@ -50,9 +50,12 @@ class AppClient {
 		{
 		    for (int j = 0; j < appsByArea.get(i).size(); j++)
 		    {
-		    	if(appsByArea.get(i).get(j).getIsOn()) { //check if the appliance is on
-		    	sumWatts += appsByArea.get(i).get(j).getOnWatt(); //if so then add its wattage to sumWatts
-		    			}
+		    	if(appsByArea.get(i).get(j).getPowerMode()==2) { // if appliance is in the on mode, add onWatts to sumWatts
+		    		sumWatts += appsByArea.get(i).get(j).getOnWatt();
+		    	}
+		    	else if(appsByArea.get(i).get(j).getPowerMode()==1) { // if appliance is in the low-power mode, add onWatts*(1-smartProb) to sumWatts;
+		    		sumWatts += appsByArea.get(i).get(j).getOnWatt()*(1-appsByArea.get(i).get(j).getSmartProb()); 
+		    	}
 		        	}
 		    	}
 		return sumWatts;
