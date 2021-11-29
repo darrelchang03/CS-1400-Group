@@ -487,7 +487,7 @@ class AppClient {
 				    for (int j = 0; j < appsByArea.get(i).size(); j++)
 				    {
 				    		if(appsByArea.get(i).get(j).getOnWatt()==highestSmartWattage) { // if appliance is the appliance with the highest smart wattage set appliance to low power mode
-				    			appsByArea.get(i).get(j).setIsOn(false); //
+				    			appsByArea.get(i).get(j).setPowerMode(1); //
 				        	}
 				    	}
 				    } 
