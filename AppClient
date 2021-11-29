@@ -475,7 +475,7 @@ class AppClient {
 				{
 				    for (int j = 0; j < appsByArea.get(i).size(); j++)
 				    {
-				    	if(appsByArea.get(i).get(j).getIsSmart()) {
+				    	if(appsByArea.get(i).get(j).getIsSmart() && appsByArea.get(i).get(j).getPowerMode()==2) {
 				    		if(appsByArea.get(i).get(j).getOnWatt()>highestSmartWattage) {
 				    			highestSmartWattage = appsByArea.get(i).get(j).getOnWatt();
 				        	}
