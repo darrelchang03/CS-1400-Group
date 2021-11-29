@@ -42,7 +42,7 @@ public String getAppName() {
 public int getOnWatt() {
 	return this.onWatt;
 }
-public double getProbOn() {
+public double getOnProb() {
 	return this.probOn;
 }
 public boolean getIsSmart() {
@@ -50,4 +50,5 @@ public boolean getIsSmart() {
 }
 public double getSmartProb() {
 	return this.smartProb;
+	}
 }
