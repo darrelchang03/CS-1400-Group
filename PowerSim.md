@@ -30,7 +30,17 @@ class AppClient {
 			String appType;
 			int lowPower;
 			Appliance aAppl;
-			
+			while(scan.hasNextLine()) {
+				scan.useDelimiter(",");
+				locationID = scan.nextInt();
+				appName = scan.next();
+				onPower = scan.nextInt();
+				probOn = scan.nextFloat();
+				appType = scan.next();
+				lowPower = scan.nextInt();
+				List.add(new Appliance(locationID, appName, onPower, probOn, appType, lowPower)); 
+				// creates an object Appliance with file defined attributes values in the arraylist List (doesnt work until Arraylist code is fixed)
+			}
 			/*Complete the method*/
 			scan.close();
 		}catch(IOException ioe){ 
