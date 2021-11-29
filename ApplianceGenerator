@@ -1,6 +1,6 @@
 package buildingSim;
 
-import java.util.Scanner;
+import java.util.*;
 import java.util.StringTokenizer;
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 
 public class ApplianceGenerator {
+	public Scanner scnr = new Scanner(System.in);
+	
 	public static class Appliance {
 		public String name;
 		public int onW, offW;
@@ -36,18 +38,17 @@ public class ApplianceGenerator {
 		int count = 0;
 		while (scan.hasNext()) {
 			StringTokenizer stringToken = new StringTokenizer(scan.nextLine());
-			appTypes[count] = (new Appliance(stringToken.nextToken(","), 									Integer.parseInt(stringToken.nextToken(",")),
-					Integer.parseInt(stringToken.nextToken(",")), 									Double.parseDouble(stringToken.nextToken(",")),
-					Boolean.parseBoolean(stringToken.nextToken(",")), 								Double.parseDouble(stringToken.nextToken())));
+			appTypes[count] = (new Appliance(stringToken.nextToken(","), Integer.parseInt(stringToken.nextToken(",")),
+					Integer.parseInt(stringToken.nextToken(",")), Double.parseDouble(stringToken.nextToken(",")),
+					Boolean.parseBoolean(stringToken.nextToken(",")), Double.parseDouble(stringToken.nextToken())));
 			count++;
 		}
-		/*
-		 * output a comma delimited file the location (represented by an 8 digit numeric
-		 * account number) type (string) "on" wattage used (integer) probability
-		 * (floating point, i.e..01=1%) that the appliance is "on" at any time smart
-		 * (boolean) Smart appliances (if "on") power reduction percent when changed to
-		 * "low" status(floating point, i.e..33=33%).
-		 */
+/* output a comma delimited file the location (represented by an 8 digit numeric
+ * account number) type (string) "on" wattage used (integer) probability
+ * (floating point, i.e..01=1%) that the appliance is "on" at any time smart
+ * (boolean) Smart appliances (if "on") power reduction percent when changed to
+ * "low" status(floating point, i.e..33=33%).
+ */
 		try {
 			FileWriter fw = new FileWriter("app.txt", false);
 			BufferedWriter bw = new BufferedWriter(fw);
@@ -69,57 +70,9 @@ public class ApplianceGenerator {
 					bw.write(String.valueOf(appTypes[index].probSmart));
 					bw.newLine();
 					bw.flush();
-					
-					/*
-					 * addAppliance((10000000 + location), appTypes[index].name,
-					 * appTypes[index].onW, appTypes[index].probOn, appTypes[index].smart,
-					 * appTypes[index].probSmart); tempList.add(new GeneratedAppliance((10000000 +
-					 * location), appTypes[index].name, appTypes[index].onW, appTypes[index].probOn,
-					 * appTypes[index].smart, appTypes[index].probSmart));
-					 */
-					
 				}
-				//appsByArea.add(tempList);
 			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-/*
-output a comma delimited file
-the location (represented by an 8 digit numeric account number)
-type (string)
-"on" wattage used (integer)
-probability (floating point, i.e..01=1%) that the appliance is "on" at any time
-smart (boolean) 
-Smart appliances (if "on") power reduction percent when changed to "low" status(floating point, i.e..33=33%).
-*/
-		try
-		{
-			FileWriter fw = new FileWriter( "output.txt", false);
-			BufferedWriter bw = new BufferedWriter( fw );
-			for (long location=1;location<=100 ;location++ ) {   // default 100 locations
-				int applianceCount=(int)(Math.random()*6)+15;  //15-20 appliances per location 
-				for (int i=1;i<=applianceCount;i++ ){
-					int index=(int)(Math.random()*count);  // pick an appliance randomly
-					bw.write(String.valueOf(10000000+location));
-					bw.write( "," );		
-					bw.write(app[index].name);
-					bw.write( "," );		
-					bw.write(String.valueOf(app[index].onW));
-					bw.write( "," );									
-					bw.write(String.valueOf(app[index].probOn));
-					bw.write( "," );		
-					bw.write(String.valueOf(app[index].smart));
-					bw.write( "," );
-					bw.write(String.valueOf(app[index].probSmart));
-					bw.newLine( );
-					bw.flush();
-				}
-			}
-		}
-		catch( IOException ioe )
-		{
-			ioe.printStackTrace( );
-		}
 	}
-}
