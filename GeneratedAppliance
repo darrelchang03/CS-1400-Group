@@ -8,6 +8,7 @@ public class GeneratedAppliance {
 	private boolean isSmart;
 	private double smartProb;
 	private boolean isOn;
+	private int powerMode;
 	
 	public  GeneratedAppliance(){
 		this.appLocation = 0;
@@ -17,6 +18,7 @@ public class GeneratedAppliance {
 		this.isSmart = false;
 		this.smartProb = 0.0;
 		this.isOn = false;
+		this.powerMode = 0;
 	}
 	
 	public GeneratedAppliance (long myLocation, String myName, int myWatt, double myProb, boolean myIsSmart, double mySmartProb) {
@@ -45,6 +47,9 @@ public class GeneratedAppliance {
 	public void setIsOn(boolean myIsOn) {
 		this.isOn = myIsOn;
 	}
+	public void setPowerMode(int myMode) {
+		this.powerMode = myMode;
+	}
 	public long getAppLocation() {
 		return this.appLocation;
 	}
@@ -65,5 +70,8 @@ public class GeneratedAppliance {
 	}
 	public boolean getIsOn() {
 		return this.isOn;
+	}
+	public int getPowerMode() {
+		return this.powerMode;
 	}
 }
