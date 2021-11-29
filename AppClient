@@ -1,8 +1,17 @@
 package buildingSim;
+/* This is a stub code. You can modify it as you wish. */
 
-import java.io.*; import java.io.File; import java.io.FileWriter; import java.io.IOException; import java.util.InputMismatchException; import java.util.Scanner; import buildingSim.ApplianceGenerator.Appliance;
+import java.io.*;
 
-public class AppClient {
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
+import java.util.StringTokenizer;
+
+import buildingSim.ApplianceGenerator.Appliance;
+
+class AppClient {
 	public void readAppFile(String file){ // method to read the comma seperated appliance file.
 		Scanner scan;
 		try {
@@ -25,7 +34,8 @@ public class AppClient {
 				probOn = scan.nextFloat();
 				appType = scan.next();
 				lowPower = scan.nextInt();
-				List.add(new Appliance(locationID, appName, onPower, probOn, appType, lowPower)); // creates an object Appliance with file defined attributes values in the arraylist List (doesnt work until Arraylist code is fixed)
+				addAppsFromFile(file);
+				//List.add(new Appliance(locationID, appName, onPower, probOn, appType, lowPower)); // creates an object Appliance with file defined attributes values in the arraylist List (doesnt work until Arraylist code is fixed)
 			}
 			/*Complete the method*/
 			
@@ -34,56 +44,63 @@ public class AppClient {
 			System.out.println("The file can not be read");
 		}
 	}
-	//create 2D array for appliances(each row represents one area)
+	
+	//read comma delimted File and create arrayList for appliances
 	public static List<List<GeneratedAppliance>> addAppsFromFile(String fileName){
-	List<GeneratedAppliance> apps = new ArrayList<GeneratedAppliance>();
-	List<List<GeneratedAppliance>>appsByArea = new ArrayList<List<GeneratedAppliance>>();
-	Long prevAppLocation = (long)10000001;
-	int counter = 0;
-	appsByArea.add(new ArrayList<GeneratedAppliance>());
-	try(Scanner scnr = new Scanner(new File (fileName))){
-		while (scnr.hasNext()) {
-			//add to arrayList
-			StringTokenizer stringToken = new StringTokenizer(scnr.nextLine());
-			Long currentAppLocation = Long.parseLong(stringToken.nextToken(","));
-			String appName = stringToken.nextToken(",");
-			int onWatt = Integer.parseInt(stringToken.nextToken(","));
-			double probOn = Double.parseDouble(stringToken.nextToken(","));
-			boolean isSmart = Boolean.parseBoolean(stringToken.nextToken(","));
-			double smartProb = Double.parseDouble(stringToken.nextToken());
-			if (currentAppLocation-prevAppLocation==1) {
-				++counter;
-				appsByArea.add(new ArrayList<GeneratedAppliance>());
-				appsByArea.get(counter).add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
-			}else{
-				appsByArea.get(counter).add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
+		List<List<GeneratedAppliance>>appsByArea = new ArrayList<List<GeneratedAppliance>>();
+		Long prevAppLocation = (long)10000001;
+		int counter = 0;
+		appsByArea.add(new ArrayList<GeneratedAppliance>());
+		try(Scanner scnr = new Scanner(new File (fileName))){
+			while (scnr.hasNext()) {
+				//add to arrayList
+				StringTokenizer stringToken = new StringTokenizer(scnr.nextLine());
+				Long currentAppLocation = Long.parseLong(stringToken.nextToken(","));
+				String appName = stringToken.nextToken(",");
+				int onWatt = Integer.parseInt(stringToken.nextToken(","));
+				double probOn = Double.parseDouble(stringToken.nextToken(","));
+				boolean isSmart = Boolean.parseBoolean(stringToken.nextToken(","));
+				double smartProb = Double.parseDouble(stringToken.nextToken());
+				if (currentAppLocation-prevAppLocation==1) {
+					++counter;
+					appsByArea.add(new ArrayList<GeneratedAppliance>());
+					appsByArea.get(counter).add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
+				}else{
+					appsByArea.get(counter).add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
+				}
+				prevAppLocation = currentAppLocation;
 			}
-			apps.add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
-			prevAppLocation = currentAppLocation;
-		}
 		}catch (IOException e) {
 			System.out.println(e);
 		}
 		return appsByArea;
 	}
 	
+	//add applliance to a specific location in the arrayList based on user input
+	public List<List<GeneratedAppliance>> addAppToLocation(long myLocation, String myName, int myWatt, double myProb, boolean myIsSmart, double mySmartProb, List<List<GeneratedAppliance>> myList) {
+		for (int i=0; i < myList.size();++i) {
+			for (int j=0;j<myList.get(i).size();++j) {
+				if (((GeneratedAppliance) myList.get(i).get(j)).getAppLocation() == myLocation) {
+					myList.get(i).add(new GeneratedAppliance(myLocation,myName,myWatt,myProb,myIsSmart,mySmartProb));
+				}
+			}
+		}
+		return myList;
+	}
+	
 	public static void main(String []args){
-	boolean correct = false;
-	String appName = "";
-	long appLocation = 0;
+		boolean correct = false;
+		String appName = "";
+		long appLocation = 0;
 		int onWatt = 0;
-		int offWatt = 0;
 		double probOn = 0.0;
 		boolean ifSmart = false;
 		double smartProb = 0.0;
-		// 1D and 2D arrayList for sorting and searching Appliances
-		List<GeneratedAppliance> appsList;
-		List<List<GeneratedAppliance>> appsByArea;
+		//2D arrayList for sorting and searching Appliance
+		List<List<GeneratedAppliance>> appsByArea = addAppsFromFile("app.txt");
 		
 		AppClient app = new AppClient();
 		//User interactive part
-		appsByArea = addAppsFromFile("app.txt");
-		
 		String option1, option2;
 		Scanner scnr = new Scanner(System.in);
 		while(true){// Application menu to be displayed to the user.
@@ -98,6 +115,7 @@ public class AppClient {
 			
 			//add an appliance
 			if (option1.equals("A")) {
+				
 				do {//check user input for name
 					try {
 						correct = true;
@@ -191,7 +209,8 @@ public class AppClient {
 						}
 					}
 				}
-				try{//print new file with added appliance using the 2D arrayList
+				try
+				{//	print new file with added appliance for reference
 					FileWriter fw = new FileWriter( "app.txt", false);
 					BufferedWriter bw = new BufferedWriter( fw );
 					for (int i=0; i < appsByArea.size();++i) {
@@ -206,7 +225,10 @@ public class AppClient {
 							bw.flush();
 						}
 					}
+					
+					
 					System.out.println("Item successfully added to inventory!");
+					
 				}
 				catch(IOException ioe)
 				{
@@ -343,15 +365,13 @@ public class AppClient {
 						System.out.println("Item successfully deleted from inventory!");
 					}
 				}
-				catch(IOException ioe)
-				{
+				catch(IOException ioe){
 					ioe.printStackTrace( );
 				}
 			}
-			// create menu option list appliance(s)
 			if (option1.equals("L")) {
 				try {
-					File readFile = new File ("app.txt");
+					File readFile = new File ("appList.txt");
 					Scanner inputFile = new Scanner(readFile);
 					FileWriter fw = new FileWriter("applist.txt", true);
 					PrintWriter pw = new PrintWriter(fw);
@@ -375,7 +395,6 @@ public class AppClient {
 						}
 						System.out.println(outputText);
 						pw.println(outputText);
-						
 						count++;
 					}
 					pw.close();
@@ -383,9 +402,11 @@ public class AppClient {
 					System.out.println("File not found");
 				}
 			}
-
-			}
 			
+			if (option1.equals("F")){
+				
+			}
 		}
-		}
+
 	}
+}
