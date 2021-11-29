@@ -467,7 +467,45 @@ class AppClient {
 				System.out.println("Program has ended.");
 				System.exit(0);
 			}
-			if (option1.equals("S")) {	
+			if (option1.equals("S")) {
+			
+				int allowedWattage = 0;
+				String fileName = "";
+				int numSteps = 0;
+				//check user input for allowed wattage
+				do {
+					try{
+						do{
+							correct = true;
+							System.out.println("Please input the maximum allowed wattage for this simulation.");
+							allowedWattage = scnr.nextInt();
+						}while (allowedWattage<=0);
+					}catch(InputMismatchException e) {
+						//checks for input mismatch and asks for user input again
+						scnr.nextLine();
+						System.out.println(e);
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+				
+				//checks user input for number of steps
+				do {
+					try{
+						do{
+							correct = true;
+							System.out.println("Please input the number of steps for this simulation.");
+							numSteps = scnr.nextInt();
+						}while (numSteps<=0);
+					}catch(InputMismatchException e) {
+						//checks for input mismatch and asks for user input again
+						scnr.nextLine();
+						System.out.println(e);
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+				
 				while(sumWattages(appsByArea)>allowedWattage) {
 				int highestSmartWattage = 0;
 				
