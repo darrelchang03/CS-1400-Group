@@ -418,6 +418,20 @@ class AppClient {
 			}
 			
 			if (option1.equals("F")) {
+				String fileName = "";
+					do {//check user input for name
+						try {
+							correct = true;
+							System.out.println("Please enter the name of File: ");
+							
+							fileName = scnr.nextLine();
+						}catch(InputMismatchException e) {
+							scnr.nextLine();
+							correct = false;
+							System.out.println(e);
+							System.out.println("");
+						}
+					} while (!correct);
 				try {
 					String file = "";
 					File myFile=new File(file);
