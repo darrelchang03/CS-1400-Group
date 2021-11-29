@@ -1,0 +1,53 @@
+package buildingSim;
+public class GeneratedAppliance { private long appLocation; private String appName; private int onWatt; private double probOn; private boolean isSmart; private double smartProb;
+
+public GeneratedAppliance(){
+	this.appLocation = 0;
+	this.appName = "";
+	this.onWatt = 0;
+	this.probOn = 0.0;
+	this.isSmart = false;
+	this.smartProb = 0.0;
+}
+
+public GeneratedAppliance (long myLocation, String myName, int myWatt, double myProb, boolean myIsSmart, double mySmartProb) {
+	setAppLocation(myLocation);	setAppName(myName);	setOnWatt(myWatt);	setProbOn(myProb);	setIsSmart(myIsSmart);	setSmartProb(mySmartProb);
+}
+
+//mutators and getters
+public void setAppLocation(long myLocation) {
+	this.appLocation = myLocation;
+}
+public void setAppName(String myName) {
+	this.appName = myName;
+}
+public void setOnWatt(int myWatt) {
+	this.onWatt = myWatt;
+}
+public void setProbOn(double myProb) {
+	this.probOn = myProb;
+}
+public void setIsSmart(boolean mySmart) {
+	this.isSmart = mySmart;
+}
+public void setSmartProb(double mySmartProb) {
+	this.smartProb = mySmartProb;
+}
+public long getAppLocation() {
+	return this.appLocation;
+}
+public String getAppName() {
+	return this.appName;
+}
+public int getOnWatt() {
+	return this.onWatt;
+}
+public double getProbOn() {
+	return this.probOn;
+}
+public boolean getIsSmart() {
+	return this.isSmart;
+}
+public double getSmartProb() {
+	return this.smartProb;
+}
