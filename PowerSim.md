@@ -338,6 +338,8 @@ class AppClient {
 	}
 }
 
+
+
 ----------------------------------------------------------ApplianceGeneratorClass---------------------------------
 
 package buildingSim;
