@@ -312,7 +312,34 @@ class AppClient {
 						correct = false;
 					}
 				}while (!correct);
-
+			if (option1.equals("F")) {
+				try {
+					String file;
+					File myFile=new File(file);
+					Scanner scan = new Scanner(myFile);//each line has the format
+//locationID,name of app,onPower,probability of staying on, smart or not,Smart appliances (if "on") power reduction percent when changed to "low" status(floating point, i.e..33=33%).
+					String str;
+					int locationID;
+					int onPower;
+					String appType;
+					int lowPower;
+					Appliance aAppl;
+					while(scan.hasNextLine()) {
+						scan.useDelimiter(",");
+						locationID = scan.nextInt();
+						appName = scan.next();
+						onPower = scan.nextInt();
+						probOn = scan.nextFloat();
+						appType = scan.next();
+						lowPower = scan.nextInt();
+						List.add(new Appliance(locationID, appName, onPower, probOn, appType, lowPower)); 
+// creates an object Appliance with file defined attributes values in the arraylist List (doesnt work until Arraylist code is fixed)
+						}		
+						scan.close();
+					}catch(IOException ioe){ 
+						System.out.println("The file can not be read");
+					}
+				}
 			}
 			
 		}
