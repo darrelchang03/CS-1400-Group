@@ -7,7 +7,6 @@ public class GeneratedAppliance {
 	private double probOn;
 	private boolean isSmart;
 	private double smartProb;
-	private boolean isOn;
 	private int powerMode;
 	
 	public  GeneratedAppliance(){
@@ -17,12 +16,11 @@ public class GeneratedAppliance {
 		this.probOn = 0.0;
 		this.isSmart = false;
 		this.smartProb = 0.0;
-		this.isOn = false;
 		this.powerMode = 0;
 	}
 	
 	public GeneratedAppliance (long myLocation, String myName, int myWatt, double myProb, boolean myIsSmart, double mySmartProb) {
-		setAppLocation(myLocation);	setAppName(myName);	setOnWatt(myWatt);	setOnProb(myProb);	setIsSmart(myIsSmart);	setSmartProb(mySmartProb); setIsOn(false);
+		setAppLocation(myLocation);	setAppName(myName);	setOnWatt(myWatt);	setOnProb(myProb);	setIsSmart(myIsSmart);	setSmartProb(mySmartProb); setPowerMode(0);
 	}
 	
 	//mutators and getters
@@ -44,9 +42,6 @@ public class GeneratedAppliance {
 	public void setSmartProb(double mySmartProb) {
 		this.smartProb = mySmartProb;
 	}
-	public void setIsOn(boolean myIsOn) {
-		this.isOn = myIsOn;
-	}
 	public void setPowerMode(int myMode) {
 		this.powerMode = myMode;
 	}
@@ -67,9 +62,6 @@ public class GeneratedAppliance {
 	}
 	public double getSmartProb() {
 		return this.smartProb;
-	}
-	public boolean getIsOn() {
-		return this.isOn;
 	}
 	public int getPowerMode() {
 		return this.powerMode;
