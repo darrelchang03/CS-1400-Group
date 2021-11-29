@@ -44,6 +44,19 @@ class AppClient {
 			System.out.println("The file can not be read");
 		}
 	}
+	public int sumWattages(List<List<GeneratedAppliance>> appsByArea) {
+		int sumWatts = 0;
+		for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist
+		{
+		    for (int j = 0; j < appsByArea.get(i).size(); j++)
+		    {
+		    	if(appsByArea.get(i).get(j).getIsOn()) {
+		    	sumWatts += appsByArea.get(i).get(j).getOnWatt();
+		    			}
+		        	}
+		    	}
+		return sumWatts;
+	}
 	
 	//read comma delimted File and create arrayList for appliances
 	public static List<List<GeneratedAppliance>> addAppsFromFile(String fileName){
