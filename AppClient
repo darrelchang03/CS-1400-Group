@@ -34,11 +34,13 @@ public class AppClient {
 			System.out.println("The file can not be read");
 		}
 	}
+	//create 2D array for appliances(each row represents one area)
 	public static List<List<GeneratedAppliance>> addAppsFromFile(String fileName){
 		List<GeneratedAppliance> apps = new ArrayList<GeneratedAppliance>();
 		List<List<GeneratedAppliance>>appsByArea = new ArrayList<List<GeneratedAppliance>>();
-		List<GeneratedAppliance> tempList = new ArrayList<GeneratedAppliance>();
 		Long prevAppLocation = (long)10000001;
+		int counter = 0;
+		appsByArea.add(new ArrayList<GeneratedAppliance>());
 		try(Scanner scnr = new Scanner(new File (fileName))){
 			while (scnr.hasNext()) {
 				//add to arrayList
@@ -49,26 +51,19 @@ public class AppClient {
 				double probOn = Double.parseDouble(stringToken.nextToken(","));
 				boolean isSmart = Boolean.parseBoolean(stringToken.nextToken(","));
 				double smartProb = Double.parseDouble(stringToken.nextToken());
-				if (currentAppLocation-prevAppLocation!=0 || currentAppLocation == 10000100) {
-					for(int i=0; i<tempList.size();++i) {
-						System.out.println(tempList.get(i).getAppName());
-						System.out.println();
-					}
-					appsByArea.add(tempList);
-					tempList.clear();
-					
+				if (currentAppLocation-prevAppLocation==1) {
+					++counter;
+					appsByArea.add(new ArrayList<GeneratedAppliance>());
+					appsByArea.get(counter).add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
+				}else{
+					appsByArea.get(counter).add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
 				}
-				tempList.add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
 				apps.add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
-				
 				prevAppLocation = currentAppLocation;
-				
-				
-			}			
+			}
 		}catch (IOException e) {
 			System.out.println(e);
 		}
-		
 		return appsByArea;
 	}
 
@@ -103,7 +98,6 @@ public class AppClient {
 			
 			//add an appliance
 			if (option1.equals("A")) {
-				
 				do {//check user input for name
 					try {
 						correct = true;
@@ -188,22 +182,31 @@ public class AppClient {
 						correct = false;
 					}
 				}while (!correct);
-				//write new appliance to file to "create" it
-				try
-				{//	NOTE TO SELF:  MAKE IT PRINT WITH SAME AREA CODE ITEMS
-					FileWriter fw = new FileWriter( "app.txt", true);
+				int counter = 0;
+				for (int i=0; i < appsByArea.size();++i) {
+					for (int j=0;j<appsByArea.get(i).size();++j) {
+						if (appsByArea.get(i).get(j).getAppLocation() == 10000000+appLocation && counter ==0) {
+							appsByArea.get(i).add(new GeneratedAppliance(appLocation+10000000,appName,onWatt,probOn,ifSmart,smartProb));
+							++counter;
+						}
+					}
+				}
+				try{//print new file with added appliance using the 2D arrayList
+					FileWriter fw = new FileWriter( "app.txt", false);
 					BufferedWriter bw = new BufferedWriter( fw );
-					bw.write((appLocation + 10000000) + ",");
-					bw.write(appName + ",");
-					bw.write(onWatt + ",");
-					bw.write(probOn + ",");
-					bw.write(ifSmart + ",");
-					bw.write(String.valueOf(smartProb));
-					bw.newLine();
-					bw.flush();
-					
+					for (int i=0; i < appsByArea.size();++i) {
+						for (int j=0;j<appsByArea.get(i).size();++j) {
+							bw.write((appsByArea.get(i).get(j).getAppLocation()) + ",");
+							bw.write(appsByArea.get(i).get(j).getAppName() + ",");
+							bw.write(appsByArea.get(i).get(j).getOnWatt() + ",");
+							bw.write(appsByArea.get(i).get(j).getOnProb() + ",");
+							bw.write(appsByArea.get(i).get(j).getIsSmart() + ",");
+							bw.write(String.valueOf(appsByArea.get(i).get(j).getSmartProb()));
+							bw.newLine();
+							bw.flush();
+						}
+					}
 					System.out.println("Item successfully added to inventory!");
-					
 				}
 				catch(IOException ioe)
 				{
