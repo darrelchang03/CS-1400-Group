@@ -467,6 +467,32 @@ class AppClient {
 				System.out.println("Program has ended.");
 				System.exit(0);
 			}
+			if (option1.equals("S")) {	
+				while(sumWattages>allowedWattage) {
+				int highestSmartWattage = 0;
+				
+				for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to find the smart appliance with the highest wattage
+				{
+				    for (int j = 0; j < appsByArea.get(i).size(); j++)
+				    {
+				    	if(appsByArea.get(i).get(j).getIsSmart()) {
+				    		if(appsByArea.get(i).get(j).getOnWatt()>highestSmartWattage) {
+				    			highestSmartWattage = appsByArea.get(i).get(j).getOnWatt();
+				        	}
+				    	}
+				    } 
+				}
+				for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist 
+				{
+				    for (int j = 0; j < appsByArea.get(i).size(); j++)
+				    {
+				    		if(appsByArea.get(i).get(j).getOnWatt()==highestSmartWattage) { // if appliance is the appliance with the highest smart wattage set appliance to low power mode
+				    			appsByArea.get(i).get(j).setIsOn(false); //
+				        	}
+				    	}
+				    } 
+				}
+			}
 		}
 
 	}
