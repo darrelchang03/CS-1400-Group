@@ -506,6 +506,27 @@ class AppClient {
 					}
 				}while (!correct);
 				
+				//checks user input for file name
+				do {
+					try{
+						File temp;
+						boolean fileExist = false;
+						do{
+							correct = true;
+							System.out.println("Please input the name of the file with the appliances.");
+							nameFile = scnr.next();
+							temp = new File(nameFile + ".txt");
+							fileExist = temp.exists();
+						}while (fileExist==false);
+					}catch(Exception e) {
+						//checks if file exists, and asks for input again if file isn't found
+						scnr.nextLine();
+						e.printStackTrace();
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+				
 				while(sumWattages(appsByArea)>allowedWattage) {
 				int highestSmartWattage = 0;
 				
