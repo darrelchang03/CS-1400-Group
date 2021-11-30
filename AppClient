@@ -526,7 +526,10 @@ class AppClient {
 						correct = false;
 					}
 				}while (!correct);
-				
+			
+		try {
+			PrintWriter detailedReport = new PrintWriter("detailedreport.txt");
+		
 			while(numSteps > 0){
 				
 				int appliancesSetToLow = 0;
@@ -540,7 +543,7 @@ class AppClient {
 				    	}
 				    } 
 				}
-				
+				detailedReport.println("The smart appliances affected at time step " + numSteps + " are:");
 				while(sumWattages(appsByArea)>allowedWattage) { //smart appliance algorithm
 					
 					int highestSmartWattage = 0;
@@ -561,12 +564,14 @@ class AppClient {
 						{
 				    		if(appsByArea.get(i).get(j).getOnWatt()==highestSmartWattage) { // if appliance is the appliance with the highest smart wattage set appliance to low power mode
 				    			appsByArea.get(i).get(j).setPowerMode(1);
+				    			detailedReport.println("Location: " + appsByArea.get(i).get(j).getAppLocation() + "Appliance: " + appsByArea.get(i).get(j).getAppName());
 				    			++appliancesSetToLow;
-				        			}
+				    				}
 				    			}
 				    		}
 					}
-				if (sumWattages(appsByArea)>allowedWattage) { //if total wattages are still greater than allowed after using on-low algorithm, use brownout algorithm
+				detailedReport.println("The locations browned-out at time step " + numSteps + " are:");
+				if (sumWattages(appsByArea)>allowedWattage) { //if total wattages are still greater than allowed after using on-low algorithm, use brown-out algorithm
 					while(sumWattages(appsByArea)>allowedWattage) {
 						//insert brown-out algorithm and increase locationsBrownedOut counter
 						}
@@ -574,8 +579,13 @@ class AppClient {
 				System.out.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
 				System.out.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
 				--numSteps;
+					
 				}
 			}
+		catch(IOException e){
+			
+		}
+			}	
 		}
 	}
 	public static int getRandNumber() {
