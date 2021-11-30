@@ -528,7 +528,7 @@ class AppClient {
 				}while (!correct);
 				
 			while(numSteps > 0){
-				int appliancesTurnedOff = 0;
+				int appliancesSetToLow = 0;
 				
 				for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to turn on appliances according to chance
 				{
@@ -542,6 +542,7 @@ class AppClient {
 				
 				while(sumWattages(appsByArea)>allowedWattage) {
 				int highestSmartWattage = 0;
+				int locationsBrownedOut = 0;
 				
 				for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to find the smart appliance with the highest wattage
 				{
@@ -559,10 +560,16 @@ class AppClient {
 				    for (int j = 0; j < appsByArea.get(i).size(); j++)
 				    {
 				    		if(appsByArea.get(i).get(j).getOnWatt()==highestSmartWattage) { // if appliance is the appliance with the highest smart wattage set appliance to low power mode
-				    			appsByArea.get(i).get(j).setPowerMode(1); //
+				    			appsByArea.get(i).get(j).setPowerMode(1);
+				    			++appliancesSetToLow;
 				        			}
 				    			}
-				    		} 
+				    		}
+					}
+				if (sumWattages(appsByArea)>allowedWattage) {
+					while(sumWattages(appsByArea)>allowedWattage) {
+						//insert brown-out algorithm and increase locationsBrownedOut counter
+						}
 					}
 				}
 			}
