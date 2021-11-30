@@ -529,6 +529,7 @@ class AppClient {
 				
 			while(numSteps > 0){
 				int appliancesSetToLow = 0;
+				int locationsBrownedOut = 0;
 				
 				for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to turn on appliances according to chance
 				{
@@ -542,8 +543,7 @@ class AppClient {
 				
 				while(sumWattages(appsByArea)>allowedWattage) {
 				int highestSmartWattage = 0;
-				int locationsBrownedOut = 0;
-				
+			
 				for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to find the smart appliance with the highest wattage
 				{
 				    for (int j = 0; j < appsByArea.get(i).size(); j++)
