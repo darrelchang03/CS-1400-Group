@@ -470,7 +470,7 @@ class AppClient {
 			if (option1.equals("S")) {
 			
 				int allowedWattage = 0;
-				String fileName = "";
+				String nameFile = "";
 				int numSteps = 0;
 				//check user input for allowed wattage
 				do {
