@@ -530,6 +530,16 @@ class AppClient {
 				while(sumWattages(appsByArea)>allowedWattage) {
 				int highestSmartWattage = 0;
 				
+				for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to turn on appliances according to chance
+				{
+				    for (int j = 0; j < appsByArea.get(i).size(); j++)
+				    {
+				    	if(appsByArea.get(i).get(j).getOnProb() < getRandNumber()) {
+				    		appsByArea.get(i).get(j).setPowerMode(2);
+				    	}
+				    } 
+				}
+				
 				for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to find the smart appliance with the highest wattage
 				{
 				    for (int j = 0; j < appsByArea.get(i).size(); j++)
@@ -554,5 +564,10 @@ class AppClient {
 			}
 		}
 
+	}
+	public static int getRandNumber() {
+		double min = Math.min(1, 100);
+        	double max = Math.max(1, 100);
+        	return (int) (min + (Math.random() * (max - min)));
 	}
 }
