@@ -528,9 +528,9 @@ class AppClient {
 				}while (!correct);
 				
 			while(numSteps > 0){
+				
 				int appliancesSetToLow = 0;
 				int locationsBrownedOut = 0;
-				
 				for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to turn on appliances according to chance
 				{
 				    for (int j = 0; j < appsByArea.get(i).size(); j++)
@@ -542,23 +542,23 @@ class AppClient {
 				}
 				
 				while(sumWattages(appsByArea)>allowedWattage) {
-				int highestSmartWattage = 0;
-			
-				for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to find the smart appliance with the highest wattage
-				{
-				    for (int j = 0; j < appsByArea.get(i).size(); j++)
-				    {
-				    	if(appsByArea.get(i).get(j).getIsSmart() && appsByArea.get(i).get(j).getPowerMode()==2) {
-				    		if(appsByArea.get(i).get(j).getOnWatt()>highestSmartWattage) {
-				    			highestSmartWattage = appsByArea.get(i).get(j).getOnWatt();
+					
+					int highestSmartWattage = 0;
+					for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to find the smart appliance with the highest wattage
+					{
+						for (int j = 0; j < appsByArea.get(i).size(); j++)
+						{
+							if(appsByArea.get(i).get(j).getIsSmart() && appsByArea.get(i).get(j).getPowerMode()==2) {
+								if(appsByArea.get(i).get(j).getOnWatt()>highestSmartWattage) {
+									highestSmartWattage = appsByArea.get(i).get(j).getOnWatt();
 				        	}
 				    	}
 				    } 
 				}
-				for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist 
-				{
-				    for (int j = 0; j < appsByArea.get(i).size(); j++)
-				    {
+					for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist 
+					{
+						for (int j = 0; j < appsByArea.get(i).size(); j++)
+						{
 				    		if(appsByArea.get(i).get(j).getOnWatt()==highestSmartWattage) { // if appliance is the appliance with the highest smart wattage set appliance to low power mode
 				    			appsByArea.get(i).get(j).setPowerMode(1);
 				    			++appliancesSetToLow;
@@ -571,6 +571,8 @@ class AppClient {
 						//insert brown-out algorithm and increase locationsBrownedOut counter
 						}
 					}
+				System.out.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances.");
+				System.out.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
 				}
 			}
 		}
