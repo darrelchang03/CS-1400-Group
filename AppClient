@@ -541,7 +541,7 @@ class AppClient {
 				    } 
 				}
 				
-				while(sumWattages(appsByArea)>allowedWattage) {
+				while(sumWattages(appsByArea)>allowedWattage) { //smart appliance algorithm
 					
 					int highestSmartWattage = 0;
 					for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to find the smart appliance with the highest wattage
@@ -566,12 +566,12 @@ class AppClient {
 				    			}
 				    		}
 					}
-				if (sumWattages(appsByArea)>allowedWattage) {
+				if (sumWattages(appsByArea)>allowedWattage) { //if total wattages are still greater than allowed after using on-low algorithm, use brownout algorithm
 					while(sumWattages(appsByArea)>allowedWattage) {
 						//insert brown-out algorithm and increase locationsBrownedOut counter
 						}
 					}
-				System.out.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances.");
+				System.out.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
 				System.out.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
 				}
 			}
