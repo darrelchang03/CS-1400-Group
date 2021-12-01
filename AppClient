@@ -593,6 +593,7 @@ class AppClient {
 						detailedReport.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
 						detailedReport.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
 					}
+					detailedReport.close();
 				}
 				catch(IOException e){
 					System.out.println(e);
