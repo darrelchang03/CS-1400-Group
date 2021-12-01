@@ -400,8 +400,8 @@ class AppClient {
 					try {
 						correct = true;
 						System.out.println("Please enter the name of the File: ");
-						
 						fileName = scnr.nextLine();
+						
 					}catch(InputMismatchException e) {
 						scnr.nextLine();
 						correct = false;
@@ -410,7 +410,7 @@ class AppClient {
 					}
 				} while (!correct);
 				try {
-					File myFile=new File(fileName);
+					File myFile=new File(fileName + ".txt");
 					Scanner scan = new Scanner(myFile);//each line has the format
 					//locationID,name of app,onPower,probability of staying on, smart or not,Smart appliances (if "on") power reduction percent when changed to "low" status(floating point, i.e..33=33%).
 					while(scan.hasNextLine()) {
@@ -523,7 +523,7 @@ class AppClient {
 						int locationsBrownedOut = 0;
 						for (int i = 1; i < appsByArea.size(); i++) { //iterating through the 2d arraylist to turn on appliances according to chance
 							for (int j = 0; j < appsByArea.get(i).size(); j++){
-								if(getRandNumber() < (appsByArea.get(i).get(j).getOnProb()*100)) {
+								if((appsByArea.get(i).get(j).getOnProb()*100) > getRandNumber()) {
 									appsByArea.get(i).get(j).setPowerMode(2);
 								}
 							}
@@ -532,13 +532,16 @@ class AppClient {
 						int numSmartApps = 0;
 						for(int i=0;i<appsByArea.size();++i) {//find number of smart appliances
 							for(int j=0;j<appsByArea.get(i).size();++j) {
-								if(appsByArea.get(i).get(j).getIsSmart()) {
+								if(appsByArea.get(i).get(j).getIsSmart() && appsByArea.get(i).get(j).getPowerMode()==2) {
 									++numSmartApps;
 								}
 							}
 						}
+						System.out.println(numSmartApps);
+						int wattSum = sumWattages(appsByArea);
+						System.out.println(wattSum);
 						detailedReport.println("The smart appliances affected at time step " + timeStepCounter + " are:");
-						while(sumWattages(appsByArea)>allowedWattage && numSmartApps>1) {//smart appliance algorithm
+						while(wattSum>allowedWattage && numSmartApps>0) {//smart appliance algorithm
 							
 							int rowNumSmart = 0;
 							int columnNumSmart = 0;
@@ -554,12 +557,12 @@ class AppClient {
 								}
 							}
 							--numSmartApps;
+							wattSum -= appsByArea.get(rowNumSmart).get(columnNumSmart).getOnWatt();
 							appsByArea.get(rowNumSmart).get(columnNumSmart).setPowerMode(1);
 							detailedReport.println("Location: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppLocation() + "  ;  Appliance: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppName());
 							++appliancesSetToLow;
+							
 						}
-						detailedReport.println();
-						detailedReport.println("The areas browned out during time step " + timeStepCounter + ": ");
 						if (sumWattages(appsByArea)>allowedWattage) {//if total wattages are still greater than allowed after using on-low algorithm, use brown-out algorithm
 							while(sumWattages(appsByArea)>allowedWattage) {//insert brown-out algorithm and increase locationsBrownedOut counter
 								int maxPowerRow = 0;
@@ -590,26 +593,24 @@ class AppClient {
 							}
 							
 						}
+						//System.out.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
+						//System.out.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
 						--numSteps;
 						
 						++timeStepCounter;
-						detailedReport.println("The number of smart appliances set to low in this time step is: " + appliancesSetToLow + " appliances."); 
+						//detailedReport.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
 						detailedReport.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
-						detailedReport.println();
-						detailedReport.println("------------------------------------------------------------------------------------------------------------------------------------");
-						detailedReport.println();
 					}
 					detailedReport.close();
 				}
 				catch(IOException e){
 					System.out.println(e);
 				}
-				System.out.println("Simulation completed. Please took at output file for simulation results.");
-			}	
-			if(option1.equals("P")) {
-				
+			}
+			if (option1.equals("Q")) {
+				System.out.println("Program has ended.");
+				System.exit(0);
 			}
 		}
 	}
 }
-
