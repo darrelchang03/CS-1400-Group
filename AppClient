@@ -1,7 +1,8 @@
-package groupProject2;
+package buildingSim;
 /* This is a stub code. You can modify it as you wish. */
 
 import java.io.*;
+
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-import groupProject2.ApplianceGenerator.Appliance;
+import buildingSim.ApplianceGenerator.Appliance;
 
 class AppClient {
 
@@ -520,11 +521,9 @@ class AppClient {
 					while(numSteps > 0){
 						int appliancesSetToLow = 0;
 						int locationsBrownedOut = 0;
-						int randomNum = getRandNumber();
 						for (int i = 1; i < appsByArea.size(); i++) { //iterating through the 2d arraylist to turn on appliances according to chance
 							for (int j = 0; j < appsByArea.get(i).size(); j++){
-								if((appsByArea.get(i).get(j).getOnProb()*100) < randomNum) {
-									System.out.println(randomNum);
+								if((appsByArea.get(i).get(j).getOnProb()*100) < getRandNumber()) {
 									appsByArea.get(i).get(j).setPowerMode(2);
 								}
 							}
@@ -533,10 +532,12 @@ class AppClient {
 						int numSmartApps = 0;
 						for(int i=0;i<appsByArea.size();++i) {//find number of smart appliances
 							for(int j=0;j<appsByArea.get(i).size();++j) {
-								++numSmartApps;
+								if(appsByArea.get(i).get(j).getIsSmart()) {
+									++numSmartApps;
+								}
 							}
 						}
-						
+						System.out.println(numSmartApps);
 						while(sumWattages(appsByArea)>allowedWattage && numSmartApps>0) {//smart appliance algorithm
 							detailedReport.println("The smart appliances affected at time step " + timeStepCounter + " are:");
 							int rowNumSmart = 0;
@@ -549,48 +550,53 @@ class AppClient {
 										highestSmartWattage = appsByArea.get(i).get(j).getOnWatt();
 										rowNumSmart = i;
 										columnNumSmart = j;
-										--numSmartApps;
 									}
 								}
 							}
+							--numSmartApps;
 							appsByArea.get(rowNumSmart).get(columnNumSmart).setPowerMode(1);
 							detailedReport.println("Location: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppLocation() + "Appliance: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppName());
 							++appliancesSetToLow;
 							
-						}//NOTE TO SELF: ADD A WAY TO CHECK IF THERE ARE STILL SMART APPLIANCES REMAINING
-	    			
-						detailedReport.println("The locations browned-out at time step " + timeStepCounter + " are:");
-						if (sumWattages(appsByArea)>allowedWattage) { //if total wattages are still greater than allowed after using on-low algorithm, use brown-out algorithm
-							while(sumWattages(appsByArea)>allowedWattage) {
-								//insert brown-out algorithm and increase locationsBrownedOut counter
+						}
+						System.out.println("out of smart algorith");
+						if (sumWattages(appsByArea)>allowedWattage) {//if total wattages are still greater than allowed after using on-low algorithm, use brown-out algorithm
+							while(sumWattages(appsByArea)>allowedWattage) {//insert brown-out algorithm and increase locationsBrownedOut counter
 								int maxPowerRow = 0;
 								int maxTotalRowPower = 0;
 								int currentRowPower = 0;
-								for(int i=0;i<appsByArea.size();++i){
+								for(int i=0;i<appsByArea.size();++i){//find the row/area that has the highest watt consumption
+									currentRowPower = 0;
+									System.out.println(numSteps);
 									for(int j=0;j<appsByArea.get(i).size();++j) {
 										if(appsByArea.get(i).get(j).getPowerMode()==2) {
+											
 											currentRowPower += appsByArea.get(i).get(j).getOnWatt();
-											appsByArea.get(i).get(j).setPowerMode(0);
 										}
 										if(appsByArea.get(i).get(j).getPowerMode()==1) {
+											
 											currentRowPower += (appsByArea.get(i).get(j).getOnWatt() * (1 - appsByArea.get(i).get(j).getSmartProb()));
-											appsByArea.get(i).get(j).setPowerMode(0);
 										}
 									}
 									if(maxTotalRowPower<currentRowPower) {
 										maxTotalRowPower = currentRowPower;
-										maxPowerRow = i+10000001;
+										maxPowerRow = i;
 									}
 								}
-								allowedWattage -= maxTotalRowPower;
-								detailedReport.println(maxPowerRow + ",");
+								for(int i=0;i<appsByArea.get(maxPowerRow).size();++i) {
+									appsByArea.get(maxPowerRow).get(i).setPowerMode(0);
+								}
+								detailedReport.println((maxPowerRow + 10000001) + ",");
+								++locationsBrownedOut;
 							}
+							
 						}
 						//System.out.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
 						//System.out.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
 						--numSteps;
+						
 						++timeStepCounter;
-						detailedReport.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
+						//detailedReport.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
 						detailedReport.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
 					}
 					detailedReport.close();
@@ -601,5 +607,5 @@ class AppClient {
 			}	
 		}
 	}
-	
 }
+
