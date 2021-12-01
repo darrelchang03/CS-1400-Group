@@ -557,7 +557,7 @@ class AppClient {
 								}
 							}
 							--numSmartApps;
-							wattSum -= appsByArea.get(rowNumSmart).get(columnNumSmart).getOnWatt();
+							wattSum -= appsByArea.get(rowNumSmart).get(columnNumSmart).getOnWatt()*(1-appsByArea.get(i).get(j).getSmartProb());
 							appsByArea.get(rowNumSmart).get(columnNumSmart).setPowerMode(1);
 							detailedReport.println("Location: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppLocation() + "  ;  Appliance: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppName());
 							++appliancesSetToLow;
