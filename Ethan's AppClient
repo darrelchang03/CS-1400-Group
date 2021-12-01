@@ -1,0 +1,614 @@
+package buildingSim;
+/* This is a stub code. You can modify it as you wish. */
+
+import java.io.*;
+
+
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
+import java.util.StringTokenizer;
+
+import buildingSim.ApplianceGenerator.Appliance;
+
+class AppClient {
+
+	//read comma delimted file(app.txt) and create arrayList for appliances
+	public static List<List<GeneratedAppliance>> addAppsFromFile(String fileName){
+		List<List<GeneratedAppliance>>appsByArea = new ArrayList<List<GeneratedAppliance>>();
+		Long prevAppLocation = (long)10000001;
+		int counter = 0;
+		appsByArea.add(new ArrayList<GeneratedAppliance>());
+		try(Scanner scnr = new Scanner(new File (fileName))){
+			while (scnr.hasNext()) {
+				//use attributed from file to create new object and append new object to arrayList
+				StringTokenizer stringToken = new StringTokenizer(scnr.nextLine());
+				Long currentAppLocation = Long.parseLong(stringToken.nextToken(","));
+				String appName = stringToken.nextToken(",");
+				int onWatt = Integer.parseInt(stringToken.nextToken(","));
+				double probOn = Double.parseDouble(stringToken.nextToken(","));
+				boolean isSmart = Boolean.parseBoolean(stringToken.nextToken(","));
+				double smartProb = Double.parseDouble(stringToken.nextToken());
+				if (currentAppLocation-prevAppLocation==1) {
+					++counter;
+					appsByArea.add(new ArrayList<GeneratedAppliance>());
+					appsByArea.get(counter).add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
+				}else{
+					appsByArea.get(counter).add(new GeneratedAppliance(currentAppLocation,appName,onWatt, probOn,isSmart, smartProb));
+				}
+				prevAppLocation = currentAppLocation;
+			}
+		}catch (IOException e) {
+			System.out.println(e);
+		}
+		return appsByArea;
+	}
+	
+	//add appliance to a specific location in the arrayList based on user input
+	public static List<List<GeneratedAppliance>> addAppToLocation(long myLocation, String myName, int myWatt, double myProb, boolean myIsSmart, double mySmartProb, List<List<GeneratedAppliance>> myList) {
+		for (int i=0; i < myList.size();++i) {
+			for (int j=0;j<myList.get(i).size();++j) {
+				if ( myList.get(i).get(j).getAppLocation() == myLocation) {
+					myList.get(i).add(new GeneratedAppliance(myLocation,myName,myWatt,myProb,myIsSmart,mySmartProb));
+				}
+			}
+		}
+		return myList;
+	}
+	
+	//return sum of wattage for each row of arrayList
+	public static int sumWattages(List<List<GeneratedAppliance>> appsByArea) {
+		int sumWatts = 0;
+		for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist
+		{
+		    for (int j = 0; j < appsByArea.get(i).size(); j++)
+		    {
+		    	if(appsByArea.get(i).get(j).getPowerMode()==2) { // if appliance is in the on mode, add onWatts to sumWatts
+		    		sumWatts += appsByArea.get(i).get(j).getOnWatt();
+		    	}
+		    	else if(appsByArea.get(i).get(j).getPowerMode()==1) { // if appliance is in the low-power mode, add onWatts*(1-smartProb) to sumWatts;
+		    		sumWatts += appsByArea.get(i).get(j).getOnWatt()*(1-appsByArea.get(i).get(j).getSmartProb()); 
+		    	}
+		        	}
+		    	}
+		return sumWatts;
+	}
+	//get random number for turning on appliances
+	public static int getRandNumber() {
+		double min = Math.min(1, 100);
+        	double max = Math.max(1, 100);
+        	return (int) (min + (Math.random() * (max - min)));
+	}	
+
+	
+	public static void main(String []args){
+		boolean correct = false;
+		String appName = "";
+		long appLocation = 0;
+		int onWatt = 0;
+		double probOn = 0.0;
+		boolean ifSmart = false;
+		double smartProb = 0.0;
+		//2D arrayList for sorting and searching Appliance
+		List<List<GeneratedAppliance>> appsByArea = addAppsFromFile("app.txt");
+		
+		AppClient app = new AppClient();
+		//User interactive part
+		String option1, option2;
+		Scanner scnr = new Scanner(System.in);
+		while(true){// Application menu to be displayed to the user.
+			System.out.println("Select an option:");
+			System.out.println("Type \"A\" Add an appliance");
+			System.out.println("Type \"D\" Delete an appliance");	
+			System.out.println("Type \"L\" List the appliances");
+			System.out.println("Type \"F\" Read Appliances from a file");
+			System.out.println("Type \"S\" To Start the simulation");
+			System.out.println("Type \"Q\" Quit the program");
+			option1=scnr.nextLine();
+			
+			//add an appliance
+			if (option1.equals("A")) {
+				do {//check user input for name
+					try {
+						correct = true;
+						System.out.println("Please enter the name of the appliance you would like to add.");
+						appName = scnr.nextLine();
+					}catch(InputMismatchException e) {
+						scnr.nextLine();
+						correct = false;
+						System.out.println(e);
+						System.out.println("");
+					}
+				}while (!correct);
+				do { //check user input
+					try{
+						do {
+							correct = true;
+							System.out.println("Please enter the location(1-100 inclusive) of the new appliance.");
+							appLocation = scnr.nextInt();
+						}while(appLocation<1 || appLocation>100);
+					}catch(InputMismatchException e) {
+						scnr.nextLine();
+						System.out.println(e);
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+				do { //check user input
+					try{
+						do{
+							correct = true;
+							System.out.println("Please enter the \"on\" wattage.");
+							onWatt = scnr.nextInt();
+						}while (onWatt<0);
+					}catch(InputMismatchException e) {
+						scnr.nextLine();
+						System.out.println(e);
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+				do { //check user input
+					try{
+						do {
+							correct = true;
+							System.out.println("Please enter the probability(0-1 inclusive) that the appliance will turn on.");
+							probOn = scnr.nextDouble();
+						}while(probOn>1 || probOn<0);
+					}catch(InputMismatchException e) {
+						scnr.nextLine();
+						System.out.println(e);
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+				do { //check user input
+					try{
+						correct = true;
+						System.out.println("Please specify if the appliance will be \"smart\" (true or false).");
+						ifSmart = scnr.nextBoolean();
+						if (ifSmart) {
+							do { //check user input
+								try { 
+									do {
+									correct = true;
+									System.out.println("Please enter the power cut rate(0-1 inclusive) on the appliance when it is in low power mode.");
+									smartProb = scnr.nextDouble();
+									}while(smartProb>1 || smartProb<0);
+								}catch(InputMismatchException e) {
+									scnr.nextLine();
+									System.out.println(e);
+									System.out.println("");
+									correct = false;
+								}
+							}while (!correct);
+						}else {
+							smartProb = 0.0;
+						}
+					}catch(InputMismatchException e) {
+						scnr.nextLine();
+						System.out.println(e);
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+				int counter = 0;
+				for (int i=0; i < appsByArea.size();++i) {
+					for (int j=0;j<appsByArea.get(i).size();++j) {
+						if (appsByArea.get(i).get(j).getAppLocation() == 10000000+appLocation && counter ==0) {
+							appsByArea.get(i).add(new GeneratedAppliance(appLocation+10000000,appName,onWatt,probOn,ifSmart,smartProb));
+							++counter;
+						}
+					}
+				}
+				try
+				{//	print new file with added appliance for reference
+					FileWriter fw = new FileWriter( "app.txt", false);
+					BufferedWriter bw = new BufferedWriter( fw );
+					for (int i=0; i < appsByArea.size();++i) {
+						for (int j=0;j<appsByArea.get(i).size();++j) {
+							bw.write((appsByArea.get(i).get(j).getAppLocation()) + ",");
+							bw.write(appsByArea.get(i).get(j).getAppName() + ",");
+							bw.write(appsByArea.get(i).get(j).getOnWatt() + ",");
+							bw.write(appsByArea.get(i).get(j).getOnProb() + ",");
+							bw.write(appsByArea.get(i).get(j).getIsSmart() + ",");
+							bw.write(String.valueOf(appsByArea.get(i).get(j).getSmartProb()));
+							bw.newLine();
+							bw.flush();
+						}
+					}
+					
+					
+					System.out.println("Item successfully added to inventory!");
+					
+				}
+				catch(IOException ioe)
+				{
+					ioe.printStackTrace( );
+				}
+			}
+		//create menu option delete appliance
+			if (option1.equals("D")) {
+				do {//check user input for name
+					try {
+						correct = true;
+						System.out.println("Please enter the name of the appliance you would like to delete(CASE SENSATIVE).");
+						appName = scnr.nextLine();
+					}catch(InputMismatchException e) {
+						scnr.nextLine();
+						correct = false;
+						System.out.println(e);
+						System.out.println("");
+					}
+				}while (!correct);
+				do { //check user input
+					try{
+						do {
+							correct = true;
+							System.out.println("Please enter the location(1-100 inclusive) of the new appliance.");
+							appLocation = scnr.nextInt();
+						}while(appLocation<1 || appLocation>100);
+					}catch(InputMismatchException e) {
+						scnr.nextLine();
+						System.out.println(e);
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+				do { //check user input
+					try{
+						do{
+							correct = true;
+							System.out.println("Please enter the \"on\" wattage of the item you would like to delete.");
+							onWatt = scnr.nextInt();
+						}while (onWatt<0);
+					}catch(InputMismatchException e) {
+						scnr.nextLine();
+						System.out.println(e);
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+				do { //check user input
+					try{
+						do {
+							correct = true;
+							System.out.println("Please enter the \"on\" probability(0-1 inclusive) of the item you would like to delete.");
+							probOn = scnr.nextDouble();
+						}while(probOn>1 || probOn<0);
+					}catch(InputMismatchException e) {
+						scnr.nextLine();
+						System.out.println(e);
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+				do { //check user input
+					try{
+						correct = true;
+						System.out.println("Please specify the \"smart\" factor(true or false) of the appliance you would like to delete.");
+						ifSmart = scnr.nextBoolean();
+						if (ifSmart) {
+							do { //check user input
+								try { 
+									do {
+									correct = true;
+									System.out.println("Please enter the power cut rate(0-1 inclusive) of the appliance that you would like to delete.");
+									smartProb = scnr.nextDouble();
+									}while(smartProb>1 || smartProb<0);
+								}catch(InputMismatchException e) {
+									scnr.nextLine();
+									System.out.println(e);
+									System.out.println("");
+									correct = false;
+								}
+							}while (!correct);
+						}else {
+							smartProb = 0.0;
+						}
+					}catch(InputMismatchException e) {
+						scnr.nextLine();
+						System.out.println(e);
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+				//iterate through array and compare each appliance attributes to user input
+				boolean itemFound = false;
+				for (int i=0; i < appsByArea.size();++i) {
+					for (int j=0;j<appsByArea.get(i).size();++j) {
+						long deleteLocation = appsByArea.get(i).get(j).getAppLocation();
+						String deleteName = appsByArea.get(i).get(j).getAppName();
+						int deleteWatt = appsByArea.get(i).get(j).getOnWatt();
+						double deleteProbOn = appsByArea.get(i).get(j).getOnProb();
+						boolean deleteSmart = appsByArea.get(i).get(j).getIsSmart();
+						double deleteSmartProb = appsByArea.get(i).get(j).getSmartProb();
+						if (deleteLocation==appLocation+10000000 && 
+							deleteName.equals(appName) && 
+							deleteWatt==onWatt && 
+							deleteProbOn==probOn && 
+							String.valueOf(deleteSmart).equals(String.valueOf(ifSmart)) && 
+							deleteSmartProb==smartProb) {
+							appsByArea.get(i).remove(j);
+							itemFound = true;
+						}
+					}
+				}
+				
+				try{//	print new file with added appliance for reference
+					FileWriter fw = new FileWriter( "app.txt", false);
+					BufferedWriter bw = new BufferedWriter( fw );
+					for (int i=0; i < appsByArea.size();++i) {
+						for (int j=0;j<appsByArea.get(i).size();++j) {
+							bw.write((appsByArea.get(i).get(j).getAppLocation()) + ",");
+							bw.write(appsByArea.get(i).get(j).getAppName() + ",");
+							bw.write(appsByArea.get(i).get(j).getOnWatt() + ",");
+							bw.write(appsByArea.get(i).get(j).getOnProb() + ",");
+							bw.write(appsByArea.get(i).get(j).getIsSmart() + ",");
+							bw.write(String.valueOf(appsByArea.get(i).get(j).getSmartProb()));
+							bw.newLine();
+							bw.flush();
+						}
+					}
+					if (!itemFound) {
+						System.out.println("Item not found. Please check inputs and try again.");
+					}else {
+						System.out.println("Item successfully deleted from inventory!");
+					}
+				}
+				catch(IOException ioe){
+					ioe.printStackTrace( );
+				}
+			}
+			if (option1.equals("L")) {
+				try {
+					Scanner inputFile = new Scanner(new File ("app.txt"));
+					FileWriter fw = new FileWriter("GeneratedList.txt", true);
+					PrintWriter pw = new PrintWriter(fw);
+					int count = 1;
+					System.out.println("Here are the current appliances:");
+					pw.println("Here are the current appliances:");
+					while (inputFile.hasNext()) {
+						String outputText = "";
+						String fileText = inputFile.nextLine();
+						if (fileText.contains(",")) {
+							outputText += "Location: " + fileText.substring(0, fileText.indexOf(",")) + "\n";
+							outputText += "Name: " + fileText.substring(fileText.indexOf(",")+1, fileText.indexOf(",", fileText.indexOf(",")+1)) + "\n";
+							int two = fileText.indexOf(",", fileText.indexOf(",")+1);
+							outputText += "Wattage: " + fileText.substring(fileText.indexOf(",", fileText.indexOf(",")+1)+1, fileText.indexOf(",", two + 1)) + "\n";
+							int three = fileText.indexOf(",", two + 1);
+							outputText += "Probability to turn on: " + fileText.substring(fileText.indexOf(",", two + 1)+1, fileText.indexOf(",", three+1)) + "\n";
+							int four = fileText.indexOf(",", three+1);
+							outputText += "Smart Appliance: " + fileText.substring(fileText.indexOf(",", three+1)+1, fileText.indexOf(",", four+1)) + "\n";
+							int five = fileText.indexOf(",", four+1);
+							outputText += "Power cut rate: " + fileText.substring(fileText.indexOf(",", four+1)+1) + "\n";
+						}
+						System.out.println(outputText);
+						pw.println(outputText);
+						count++;
+					}
+					pw.close();
+				} catch (IOException e) {
+					System.out.println("File not found");
+				}
+			}
+			
+			if (option1.equals("F")) {
+				String fileName = "";
+				do {//check user input for name
+					try {
+						correct = true;
+						System.out.println("Please enter the name of the File: ");
+						
+						fileName = scnr.nextLine();
+					}catch(InputMismatchException e) {
+						scnr.nextLine();
+						correct = false;
+						System.out.println(e);
+						System.out.println("");
+					}
+				} while (!correct);
+				try {
+					File myFile=new File(fileName);
+					Scanner scan = new Scanner(myFile);//each line has the format
+					//locationID,name of app,onPower,probability of staying on, smart or not,Smart appliances (if "on") power reduction percent when changed to "low" status(floating point, i.e..33=33%).
+					while(scan.hasNextLine()) {
+						StringTokenizer stringToken = new StringTokenizer(scan.nextLine());
+						appLocation = Long.parseLong(stringToken.nextToken(","));
+						appName = stringToken.nextToken(",");
+						onWatt = Integer.parseInt(stringToken.nextToken(","));
+						probOn = Double.parseDouble(stringToken.nextToken(","));
+						ifSmart = Boolean.parseBoolean(stringToken.nextToken(","));
+						smartProb = Double.parseDouble(stringToken.nextToken());
+						for(int i=0;i<appsByArea.size();++i) {
+							if(appLocation == appsByArea.get(i).get(0).getAppLocation()) {
+								appsByArea.get(i).add(new GeneratedAppliance(appLocation,appName,onWatt,probOn,ifSmart,smartProb));
+							}
+						}
+					}
+					
+					try{//	print new file with added appliance for reference
+						FileWriter fw = new FileWriter( "app.txt", false);
+						BufferedWriter bw = new BufferedWriter( fw );
+						for (int i=0; i < appsByArea.size();++i) {
+							for (int j=0;j<appsByArea.get(i).size();++j) {
+								bw.write((appsByArea.get(i).get(j).getAppLocation()) + ",");
+								bw.write(appsByArea.get(i).get(j).getAppName() + ",");
+								bw.write(appsByArea.get(i).get(j).getOnWatt() + ",");
+								bw.write(appsByArea.get(i).get(j).getOnProb() + ",");
+								bw.write(appsByArea.get(i).get(j).getIsSmart() + ",");
+								bw.write(String.valueOf(appsByArea.get(i).get(j).getSmartProb()));
+								bw.newLine();
+								bw.flush();
+							}
+						}
+					}
+					catch(IOException ioe){
+						ioe.printStackTrace( );
+					}
+					scan.close();
+				}catch(IOException ioe){ 
+					System.out.println("The file can not be read");
+				}
+				System.out.println("Appliances from file have been added to inventory!");
+			}
+			if (option1.equals("S")) {
+				
+				long allowedWattage = 0;
+				String nameFile = "";
+				int numSteps = 0;
+				int timeStepCounter = 1;
+				//check user input for allowed wattage
+				do {
+					try{
+						do{
+							correct = true;
+							System.out.println("Please input the maximum allowed wattage for this simulation.");
+							allowedWattage = scnr.nextLong();
+						}while (allowedWattage<=0);
+					}catch(InputMismatchException e) {
+						//checks for input mismatch and asks for user input again
+						scnr.nextLine();
+						System.out.println(e);
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+				
+				//checks user input for number of steps
+				do {
+					try{
+						do{
+							correct = true;
+							System.out.println("Please input the number of steps for this simulation.");
+							numSteps = scnr.nextInt();
+						}while (numSteps<=0);
+					}catch(InputMismatchException e) {
+						//checks for input mismatch and asks for user input again
+						scnr.nextLine();
+						System.out.println(e);
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+				
+				//checks user input for file name
+				do {
+					try{
+						File temp;
+						boolean fileExist = false;
+						do{
+							correct = true;
+							System.out.println("Please input the name of the file with the appliances.");
+							nameFile = scnr.next();
+							temp = new File(nameFile + ".txt");
+							fileExist = temp.exists();
+						}while (fileExist==false);
+					}catch(Exception e) {
+						//checks if file exists, and asks for input again if file isn't found
+						scnr.nextLine();
+						e.printStackTrace();
+						System.out.println("");
+						correct = false;
+					}
+				}while (!correct);
+			
+				try {
+					FileWriter fw = new FileWriter("detailedreport.txt", false);
+					PrintWriter detailedReport = new PrintWriter(fw);
+		
+					while(numSteps > 0){
+						int appliancesSetToLow = 0;
+						int locationsBrownedOut = 0;
+						for (int i = 1; i < appsByArea.size(); i++) { //iterating through the 2d arraylist to turn on appliances according to chance
+							for (int j = 0; j < appsByArea.get(i).size(); j++){
+								if(getRandNumber() < (appsByArea.get(i).get(j).getOnProb()*100)) {
+									appsByArea.get(i).get(j).setPowerMode(2);
+								}
+							}
+						}
+						
+						int numSmartApps = 0;
+						for(int i=0;i<appsByArea.size();++i) {//find number of smart appliances
+							for(int j=0;j<appsByArea.get(i).size();++j) {
+								if(appsByArea.get(i).get(j).getIsSmart()&&appsByArea.get(i).get(j).getPowerMode()==2) {//condition to check if appliance is smart and on
+									++numSmartApps;//number of smart apps that have power mode == 2 
+								}
+							}
+						}
+						detailedReport.println("The smart appliances affected at time step " + timeStepCounter + " are:");
+
+						
+						while(sumWattages(appsByArea)>allowedWattage && numSmartApps>0) {//smart appliance algorithm
+							int rowNumSmart = 0;
+							int columnNumSmart = 0;
+							int highestSmartWattage = 0;
+							for (int i = 1; i < appsByArea.size(); i++) { //iterating through the 2d arraylist to find the smart appliance with the highest on wattage
+								for (int j = 0; j < appsByArea.get(i).size(); j++) {
+									if(appsByArea.get(i).get(j).getIsSmart() && appsByArea.get(i).get(j).getPowerMode()==2 && appsByArea.get(i).get(j).getOnWatt()>highestSmartWattage) {
+										highestSmartWattage = appsByArea.get(i).get(j).getOnWatt();
+										rowNumSmart = i;
+										columnNumSmart = j;
+									}
+								}
+							}
+							--numSmartApps;//decrement number of on smart appliances so that program will not over count the same appliance
+							appsByArea.get(rowNumSmart).get(columnNumSmart).setPowerMode(1);
+							detailedReport.println("Location: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppLocation() + "  ;  Appliance: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppName());
+							++appliancesSetToLow;
+							
+						}
+						System.out.println("Out of algorithm");
+						detailedReport.println();
+						detailedReport.println("The areas browned out during time step " + timeStepCounter + ": ");
+						if (sumWattages(appsByArea)>allowedWattage) {//if total wattages are still greater than allowed after using on-low algorithm, use brown-out algorithm
+							while(sumWattages(appsByArea)>allowedWattage) {//insert brown-out algorithm and increase locationsBrownedOut counter
+								int maxPowerRow = 0;
+								int maxTotalRowPower = 0;
+								int currentRowPower = 0;
+								for(int i=0;i<appsByArea.size();++i){//find the row/area that has the highest watt consumption
+									currentRowPower = 0;
+									for(int j=0;j<appsByArea.get(i).size();++j) {
+										if(appsByArea.get(i).get(j).getPowerMode()==2) {
+											
+											currentRowPower += appsByArea.get(i).get(j).getOnWatt();
+										}
+										if(appsByArea.get(i).get(j).getPowerMode()==1) {
+											
+											currentRowPower += (appsByArea.get(i).get(j).getOnWatt() * (1 - appsByArea.get(i).get(j).getSmartProb()));
+										}
+									}
+									if(maxTotalRowPower<currentRowPower) {
+										maxTotalRowPower = currentRowPower;
+										maxPowerRow = i;
+									}
+								}
+								for(int i=0;i<appsByArea.get(maxPowerRow).size();++i) {
+									appsByArea.get(maxPowerRow).get(i).setPowerMode(0);
+								}
+								detailedReport.println((maxPowerRow + 10000001) + ",");
+								++locationsBrownedOut;
+							}
+							
+						}
+						--numSteps;
+						
+						++timeStepCounter;
+						detailedReport.println("The number of smart appliances set to low in this time step is: " + appliancesSetToLow + " appliances."); 
+						detailedReport.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
+						detailedReport.println();
+						detailedReport.println("------------------------------------------------------------------------------------------------------------------------------------");
+						detailedReport.println();
+					}
+					detailedReport.close();
+				}
+				catch(IOException e){
+					System.out.println(e);
+				}
+				System.out.println("Simulation completed. Please took at output file for simulation results.");
+			}
+		}
+	}
+}
+
