@@ -599,6 +599,9 @@ class AppClient {
 						++timeStepCounter;
 						detailedReport.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
 						detailedReport.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
+						detailedReport.println();
+						detailedReport.println("------------------------------------------------------------------------------------------------------------------------------------");
+						detailedReport.println();
 					}
 					detailedReport.close();
 				}
