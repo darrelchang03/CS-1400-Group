@@ -12,56 +12,8 @@ import java.util.StringTokenizer;
 import buildingSim.ApplianceGenerator.Appliance;
 
 class AppClient {
-	public void readAppFile(String file){ // method to read the comma seperated appliance file.
-		Scanner scan;
-		try {
-			File myFile=new File(file);
-			scan=new Scanner(myFile);//each line has the format
-			//locationID,name of app,onPower,probability of staying on, smart or not,Smart appliances (if "on") power reduction percent when changed to "low" status(floating point, i.e..33=33%).
-			String str;
-			int locationID;
-			String appName;
-			int onPower;
-			float probOn;
-			String appType;
-			int lowPower;
-			Appliance aAppl;
-			while(scan.hasNextLine()) {
-				scan.useDelimiter(",");
-				locationID = scan.nextInt();
-				appName = scan.next();
-				onPower = scan.nextInt();
-				probOn = scan.nextFloat();
-				appType = scan.next();
-				lowPower = scan.nextInt();
-				addAppsFromFile(file);
-				//List.add(new Appliance(locationID, appName, onPower, probOn, appType, lowPower)); // creates an object Appliance with file defined attributes values in the arraylist List (doesnt work until Arraylist code is fixed)
-			}
-			/*Complete the method*/
-			
-			scan.close();
-		}catch(IOException ioe){ 
-			System.out.println("The file can not be read");
-		}
-	}
-	public static int sumWattages(List<List<GeneratedAppliance>> appsByArea) {
-		int sumWatts = 0;
-		for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist
-		{
-		    for (int j = 0; j < appsByArea.get(i).size(); j++)
-		    {
-		    	if(appsByArea.get(i).get(j).getPowerMode()==2) { // if appliance is in the on mode, add onWatts to sumWatts
-		    		sumWatts += appsByArea.get(i).get(j).getOnWatt();
-		    	}
-		    	else if(appsByArea.get(i).get(j).getPowerMode()==1) { // if appliance is in the low-power mode, add onWatts*(1-smartProb) to sumWatts;
-		    		sumWatts += appsByArea.get(i).get(j).getOnWatt()*(1-appsByArea.get(i).get(j).getSmartProb()); 
-		    	}
-		        	}
-		    	}
-		return sumWatts;
-	}
-	
-	//read comma delimted File and create arrayList for appliances
+
+	//read comma delimted file(app.txt) and create arrayList for appliances
 	public static List<List<GeneratedAppliance>> addAppsFromFile(String fileName){
 		List<List<GeneratedAppliance>>appsByArea = new ArrayList<List<GeneratedAppliance>>();
 		Long prevAppLocation = (long)10000001;
@@ -69,7 +21,7 @@ class AppClient {
 		appsByArea.add(new ArrayList<GeneratedAppliance>());
 		try(Scanner scnr = new Scanner(new File (fileName))){
 			while (scnr.hasNext()) {
-				//add to arrayList
+				//use attributed from file to create new object and append new object to arrayList
 				StringTokenizer stringToken = new StringTokenizer(scnr.nextLine());
 				Long currentAppLocation = Long.parseLong(stringToken.nextToken(","));
 				String appName = stringToken.nextToken(",");
@@ -92,17 +44,41 @@ class AppClient {
 		return appsByArea;
 	}
 	
-	//add applliance to a specific location in the arrayList based on user input
-	public List<List<GeneratedAppliance>> addAppToLocation(long myLocation, String myName, int myWatt, double myProb, boolean myIsSmart, double mySmartProb, List<List<GeneratedAppliance>> myList) {
+	//add appliance to a specific location in the arrayList based on user input
+	public static List<List<GeneratedAppliance>> addAppToLocation(long myLocation, String myName, int myWatt, double myProb, boolean myIsSmart, double mySmartProb, List<List<GeneratedAppliance>> myList) {
 		for (int i=0; i < myList.size();++i) {
 			for (int j=0;j<myList.get(i).size();++j) {
-				if (((GeneratedAppliance) myList.get(i).get(j)).getAppLocation() == myLocation) {
+				if ( myList.get(i).get(j).getAppLocation() == myLocation) {
 					myList.get(i).add(new GeneratedAppliance(myLocation,myName,myWatt,myProb,myIsSmart,mySmartProb));
 				}
 			}
 		}
 		return myList;
 	}
+	//return sum of wattage for each row of arrayList
+	public static int sumWattages(List<List<GeneratedAppliance>> appsByArea) {
+		int sumWatts = 0;
+		for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist
+		{
+		    for (int j = 0; j < appsByArea.get(i).size(); j++)
+		    {
+		    	if(appsByArea.get(i).get(j).getPowerMode()==2) { // if appliance is in the on mode, add onWatts to sumWatts
+		    		sumWatts += appsByArea.get(i).get(j).getOnWatt();
+		    	}
+		    	else if(appsByArea.get(i).get(j).getPowerMode()==1) { // if appliance is in the low-power mode, add onWatts*(1-smartProb) to sumWatts;
+		    		sumWatts += appsByArea.get(i).get(j).getOnWatt()*(1-appsByArea.get(i).get(j).getSmartProb()); 
+		    	}
+		        	}
+		    	}
+		return sumWatts;
+	}
+	//get random number for turning on appliances
+	public static int getRandNumber() {
+		double min = Math.min(1, 100);
+        	double max = Math.max(1, 100);
+        	return (int) (min + (Math.random() * (max - min)));
+	}	
+
 	
 	public static void main(String []args){
 		boolean correct = false;
@@ -131,7 +107,6 @@ class AppClient {
 			
 			//add an appliance
 			if (option1.equals("A")) {
-				
 				do {//check user input for name
 					try {
 						correct = true;
@@ -359,8 +334,7 @@ class AppClient {
 					}
 				}
 				
-				try
-				{//	print new file with added appliance for reference
+				try{//	print new file with added appliance for reference
 					FileWriter fw = new FileWriter( "app.txt", false);
 					BufferedWriter bw = new BufferedWriter( fw );
 					for (int i=0; i < appsByArea.size();++i) {
@@ -387,15 +361,13 @@ class AppClient {
 			}
 			if (option1.equals("L")) {
 				try {
-					//reads the app.txt file and creates a new file to output the list
-					File readFile = new File ("app.txt");
-					Scanner inputFile = new Scanner(readFile);
-					FileWriter fw = new FileWriter("applist.txt", true);
+					Scanner inputFile = new Scanner(new File ("app.txt"));
+					FileWriter fw = new FileWriter("GeneratedList.txt", true);
 					PrintWriter pw = new PrintWriter(fw);
+					int count = 1;
 					System.out.println("Here are the current appliances:");
 					pw.println("Here are the current appliances:");
 					while (inputFile.hasNext()) {
-					//each line in app.txt is read, stored into outputText, then reformatted for better visibility
 						String outputText = "";
 						String fileText = inputFile.nextLine();
 						if (fileText.contains(",")) {
@@ -410,9 +382,9 @@ class AppClient {
 							int five = fileText.indexOf(",", four+1);
 							outputText += "Power cut rate: " + fileText.substring(fileText.indexOf(",", four+1)+1) + "\n";
 						}
-					//outputText is outputted onto both the console and applist.txt
 						System.out.println(outputText);
 						pw.println(outputText);
+						count++;
 					}
 					pw.close();
 				} catch (IOException e) {
@@ -422,56 +394,69 @@ class AppClient {
 			
 			if (option1.equals("F")) {
 				String fileName = "";
-					do {//check user input for name
-						try {
-							correct = true;
-							System.out.println("Please enter the name of File: ");
-							
-							fileName = scnr.nextLine();
-						}catch(InputMismatchException e) {
-							scnr.nextLine();
-							correct = false;
-							System.out.println(e);
-							System.out.println("");
-						}
-					} while (!correct);
+				do {//check user input for name
+					try {
+						correct = true;
+						System.out.println("Please enter the name of the File: ");
+						
+						fileName = scnr.nextLine();
+					}catch(InputMismatchException e) {
+						scnr.nextLine();
+						correct = false;
+						System.out.println(e);
+						System.out.println("");
+					}
+				} while (!correct);
 				try {
-					String file = "";
-					File myFile=new File(file);
+					File myFile=new File(fileName);
 					Scanner scan = new Scanner(myFile);//each line has the format
 					//locationID,name of app,onPower,probability of staying on, smart or not,Smart appliances (if "on") power reduction percent when changed to "low" status(floating point, i.e..33=33%).
-					String str;
-					int locationID;
-					int onPower;
-					String appType;
-					int lowPower;
-					Appliance aAppl;
 					while(scan.hasNextLine()) {
-						scan.useDelimiter(",");
-						locationID = scan.nextInt();
-						appName = scan.next();
-						onPower = scan.nextInt();
-						probOn = scan.nextFloat();
-						appType = scan.next();
-						lowPower = scan.nextInt();
-						addAppsFromFile(file);
-					}		
+						StringTokenizer stringToken = new StringTokenizer(scan.nextLine());
+						appLocation = Long.parseLong(stringToken.nextToken(","));
+						appName = stringToken.nextToken(",");
+						onWatt = Integer.parseInt(stringToken.nextToken(","));
+						probOn = Double.parseDouble(stringToken.nextToken(","));
+						ifSmart = Boolean.parseBoolean(stringToken.nextToken(","));
+						smartProb = Double.parseDouble(stringToken.nextToken());
+						for(int i=0;i<appsByArea.size();++i) {
+							if(appLocation == appsByArea.get(i).get(0).getAppLocation()) {
+								appsByArea.get(i).add(new GeneratedAppliance(appLocation,appName,onWatt,probOn,ifSmart,smartProb));
+							}
+						}
+					}
+					
+					try{//	print new file with added appliance for reference
+						FileWriter fw = new FileWriter( "app.txt", false);
+						BufferedWriter bw = new BufferedWriter( fw );
+						for (int i=0; i < appsByArea.size();++i) {
+							for (int j=0;j<appsByArea.get(i).size();++j) {
+								bw.write((appsByArea.get(i).get(j).getAppLocation()) + ",");
+								bw.write(appsByArea.get(i).get(j).getAppName() + ",");
+								bw.write(appsByArea.get(i).get(j).getOnWatt() + ",");
+								bw.write(appsByArea.get(i).get(j).getOnProb() + ",");
+								bw.write(appsByArea.get(i).get(j).getIsSmart() + ",");
+								bw.write(String.valueOf(appsByArea.get(i).get(j).getSmartProb()));
+								bw.newLine();
+								bw.flush();
+							}
+						}
+					}
+					catch(IOException ioe){
+						ioe.printStackTrace( );
+					}
 					scan.close();
 				}catch(IOException ioe){ 
 					System.out.println("The file can not be read");
 				}
-			}
-			
-			//create menu option to quit program
-			if (option1.equals("Q")) {
-				System.out.println("Program has ended.");
-				System.exit(0);
+				System.out.println("Appliances from file have been added to inventory!");
 			}
 			if (option1.equals("S")) {
-			
+				
 				int allowedWattage = 0;
 				String nameFile = "";
 				int numSteps = 0;
+				int timeStepCounter = 1;
 				//check user input for allowed wattage
 				do {
 					try{
@@ -515,7 +500,7 @@ class AppClient {
 							correct = true;
 							System.out.println("Please input the name of the file with the appliances.");
 							nameFile = scnr.next();
-							temp = new File(nameFile + ".txt");
+							temp = new File(nameFile);
 							fileExist = temp.exists();
 						}while (fileExist==false);
 					}catch(Exception e) {
@@ -527,70 +512,66 @@ class AppClient {
 					}
 				}while (!correct);
 			
-		try {
-			PrintWriter detailedReport = new PrintWriter("detailedreport.txt");
+				try {
+					PrintWriter detailedReport = new PrintWriter("detailedreport.txt");
 		
-			while(numSteps > 0){
+					while(numSteps > 0){
 				
-				int appliancesSetToLow = 0;
-				int locationsBrownedOut = 0;
-				for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to turn on appliances according to chance
-				{
-				    for (int j = 0; j < appsByArea.get(i).size(); j++)
-				    {
-				    	if(appsByArea.get(i).get(j).getOnProb() < getRandNumber()) {
-				    		appsByArea.get(i).get(j).setPowerMode(2);
-				    	}
-				    } 
-				}
-				detailedReport.println("The smart appliances affected at time step " + numSteps + " are:");
-				while(sumWattages(appsByArea)>allowedWattage) { //smart appliance algorithm
-					
-					int highestSmartWattage = 0;
-					for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist to find the smart appliance with the highest wattage
-					{
-						for (int j = 0; j < appsByArea.get(i).size(); j++)
-						{
-							if(appsByArea.get(i).get(j).getIsSmart() && appsByArea.get(i).get(j).getPowerMode()==2) {
-								if(appsByArea.get(i).get(j).getOnWatt()>highestSmartWattage) {
-									highestSmartWattage = appsByArea.get(i).get(j).getOnWatt();
-				        	}
-				    	}
-				    } 
-				}
-					for (int i = 1; i < appsByArea.size(); i++) //iterating through the 2d arraylist 
-					{
-						for (int j = 0; j < appsByArea.get(i).size(); j++)
-						{
-				    		if(appsByArea.get(i).get(j).getOnWatt()==highestSmartWattage) { // if appliance is the appliance with the highest smart wattage set appliance to low power mode
-				    			appsByArea.get(i).get(j).setPowerMode(1);
-				    			detailedReport.println("Location: " + appsByArea.get(i).get(j).getAppLocation() + "Appliance: " + appsByArea.get(i).get(j).getAppName());
-				    			++appliancesSetToLow;
-				    				}
-				    			}
-				    		}
-					}
-				detailedReport.println("The locations browned-out at time step " + numSteps + " are:");
-				if (sumWattages(appsByArea)>allowedWattage) { //if total wattages are still greater than allowed after using on-low algorithm, use brown-out algorithm
-					while(sumWattages(appsByArea)>allowedWattage) {
-						//insert brown-out algorithm and increase locationsBrownedOut counter
+						int appliancesSetToLow = 0;
+						int locationsBrownedOut = 0;
+						for (int i = 1; i < appsByArea.size(); i++) { //iterating through the 2d arraylist to turn on appliances according to chance
+							for (int j = 0; j < appsByArea.get(i).size(); j++){
+								if(appsByArea.get(i).get(j).getOnProb() < getRandNumber()) {
+									appsByArea.get(i).get(j).setPowerMode(2);
+								}
+							}
 						}
+				
+						detailedReport.println("The smart appliances affected at time step " + timeStepCounter + " are:");
+						int rowNumSmart = 0;
+						int columnNumSmart = 0;
+						boolean smartRemaining = true;
+						while(sumWattages(appsByArea)>allowedWattage && smartRemaining) { //smart appliance algorithm
+							//NOTE TO SELF: ADD A WAY TO CHECK IF THERE ARE STILL SMART APPLIANCES REMAINING
+							smartRemaining = false;
+							int highestSmartWattage = 0;
+							for (int i = 1; i < appsByArea.size(); i++) { //iterating through the 2d arraylist to find the smart appliance with the highest wattage
+								for (int j = 0; j < appsByArea.get(i).size(); j++) {
+									if(appsByArea.get(i).get(j).getIsSmart() && appsByArea.get(i).get(j).getPowerMode()==2 && appsByArea.get(i).get(j).getOnWatt()>highestSmartWattage) {
+										highestSmartWattage = appsByArea.get(i).get(j).getOnWatt();
+										rowNumSmart = i;
+										columnNumSmart = j;
+									}
+								}
+							}
+							appsByArea.get(rowNumSmart).get(columnNumSmart).setPowerMode(1);
+			    			detailedReport.println("Location: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppLocation() + "Appliance: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppName());
+			    			++appliancesSetToLow;
+						}
+	    			
+						detailedReport.println("The locations browned-out at time step " + timeStepCounter + " are:");
+						if (sumWattages(appsByArea)>allowedWattage) { //if total wattages are still greater than allowed after using on-low algorithm, use brown-out algorithm
+							while(sumWattages(appsByArea)>allowedWattage) {
+								//insert brown-out algorithm and increase locationsBrownedOut counter
+								int heighestPowerRow = 0;
+								for(int i=0;i<appsByArea.size();++i){
+									for(int j=0;j<appsByArea.get(i).size();++j) {
+										
+									}
+								}
+							}
+						}
+						System.out.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
+						System.out.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
+						--numSteps;
+						++timeStepCounter;
 					}
-				System.out.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
-				System.out.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
-				--numSteps;
-					
 				}
-			}
-		catch(IOException e){
+				catch(IOException e){
 			
-		}
+				}
 			}	
 		}
 	}
-	public static int getRandNumber() {
-		double min = Math.min(1, 100);
-        	double max = Math.max(1, 100);
-        	return (int) (min + (Math.random() * (max - min)));
-	}
+	
 }
