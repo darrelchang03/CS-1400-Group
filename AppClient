@@ -454,7 +454,7 @@ class AppClient {
 			}
 			if (option1.equals("S")) {
 				
-				int allowedWattage = 0;
+				long allowedWattage = 0;
 				String nameFile = "";
 				int numSteps = 0;
 				int timeStepCounter = 1;
@@ -464,7 +464,7 @@ class AppClient {
 						do{
 							correct = true;
 							System.out.println("Please input the maximum allowed wattage for this simulation.");
-							allowedWattage = scnr.nextInt();
+							allowedWattage = scnr.nextLong();
 						}while (allowedWattage<=0);
 					}catch(InputMismatchException e) {
 						//checks for input mismatch and asks for user input again
