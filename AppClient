@@ -538,10 +538,9 @@ class AppClient {
 							}
 						}
 						System.out.println(numSmartApps);
-						int wattSum = sumWattages(appsByArea);
-						System.out.println(wattSum);
+						System.out.println(sumWattages(appsByArea));
 						detailedReport.println("The smart appliances affected at time step " + timeStepCounter + " are:");
-						while(wattSum>allowedWattage && numSmartApps>0) {//smart appliance algorithm
+						while(sumWattages(appsByArea)>allowedWattage && numSmartApps>0) {//smart appliance algorithm
 							
 							int rowNumSmart = 0;
 							int columnNumSmart = 0;
@@ -557,7 +556,6 @@ class AppClient {
 								}
 							}
 							--numSmartApps;
-							wattSum -= appsByArea.get(rowNumSmart).get(columnNumSmart).getOnWatt()*(1-appsByArea.get(i).get(j).getSmartProb());
 							appsByArea.get(rowNumSmart).get(columnNumSmart).setPowerMode(1);
 							detailedReport.println("Location: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppLocation() + "  ;  Appliance: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppName());
 							++appliancesSetToLow;
