@@ -502,6 +502,7 @@ class AppClient {
 							correct = true;
 							System.out.println("Please input the name of the file with the appliances.");
 							nameFile = scnr.next();
+							scnr.nextLine();
 							temp = new File(nameFile + ".txt");
 							fileExist = temp.exists();
 						}while (fileExist==false);
@@ -596,7 +597,7 @@ class AppClient {
 						--numSteps;
 						
 						++timeStepCounter;
-						//detailedReport.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
+						detailedReport.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
 						detailedReport.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
 					}
 					detailedReport.close();
