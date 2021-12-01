@@ -1,4 +1,4 @@
-package buildingSim;
+package groupProject2;
 /* This is a stub code. You can modify it as you wish. */
 
 import java.io.*;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
-import buildingSim.ApplianceGenerator.Appliance;
+import groupProject2.ApplianceGenerator.Appliance;
 
 class AppClient {
 
@@ -514,7 +514,8 @@ class AppClient {
 				}while (!correct);
 			
 				try {
-					PrintWriter detailedReport = new PrintWriter("detailedreport.txt");
+					FileWriter fw = new FileWriter("detailedreport.txt", false);
+					PrintWriter detailedReport = new PrintWriter(fw);
 		
 					while(numSteps > 0){
 						int appliancesSetToLow = 0;
