@@ -501,7 +501,7 @@ class AppClient {
 							correct = true;
 							System.out.println("Please input the name of the file with the appliances.");
 							nameFile = scnr.next();
-							temp = new File(nameFile);
+							temp = new File(nameFile + ".txt");
 							fileExist = temp.exists();
 						}while (fileExist==false);
 					}catch(Exception e) {
