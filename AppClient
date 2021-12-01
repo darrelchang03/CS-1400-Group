@@ -570,7 +570,12 @@ class AppClient {
 				catch(IOException e){
 			
 				}
-			}	
+			}
+			//create menu option to quit program
+			if (option1.equals("Q")) {
+				System.out.println("Program has ended.");
+				System.exit(0);
+			}
 		}
 	}
 	
