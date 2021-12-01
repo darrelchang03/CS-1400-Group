@@ -523,7 +523,7 @@ class AppClient {
 						int locationsBrownedOut = 0;
 						for (int i = 1; i < appsByArea.size(); i++) { //iterating through the 2d arraylist to turn on appliances according to chance
 							for (int j = 0; j < appsByArea.get(i).size(); j++){
-								if((appsByArea.get(i).get(j).getOnProb()*100) < getRandNumber()) {
+								if(getRandNumber() < (appsByArea.get(i).get(j).getOnProb()*100)) {
 									appsByArea.get(i).get(j).setPowerMode(2);
 								}
 							}
@@ -537,9 +537,8 @@ class AppClient {
 								}
 							}
 						}
-						System.out.println(numSmartApps);
 						detailedReport.println("The smart appliances affected at time step " + timeStepCounter + " are:");
-						while(sumWattages(appsByArea)>allowedWattage && numSmartApps>0) {//smart appliance algorithm
+						while(sumWattages(appsByArea)>allowedWattage && numSmartApps>1) {//smart appliance algorithm
 							
 							int rowNumSmart = 0;
 							int columnNumSmart = 0;
@@ -558,8 +557,9 @@ class AppClient {
 							appsByArea.get(rowNumSmart).get(columnNumSmart).setPowerMode(1);
 							detailedReport.println("Location: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppLocation() + "  ;  Appliance: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppName());
 							++appliancesSetToLow;
-							
 						}
+						detailedReport.println();
+						detailedReport.println("The areas browned out during time step " + timeStepCounter + ": ");
 						if (sumWattages(appsByArea)>allowedWattage) {//if total wattages are still greater than allowed after using on-low algorithm, use brown-out algorithm
 							while(sumWattages(appsByArea)>allowedWattage) {//insert brown-out algorithm and increase locationsBrownedOut counter
 								int maxPowerRow = 0;
@@ -590,20 +590,25 @@ class AppClient {
 							}
 							
 						}
-						//System.out.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
-						//System.out.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
 						--numSteps;
 						
 						++timeStepCounter;
-						//detailedReport.println("The number of smart appliacnes set to low in this time step is: " + appliancesSetToLow + " appliances."); 
+						detailedReport.println("The number of smart appliances set to low in this time step is: " + appliancesSetToLow + " appliances."); 
 						detailedReport.println("The number of locations browned out in this time step is: " + locationsBrownedOut + " locations");
+						detailedReport.println();
+						detailedReport.println("------------------------------------------------------------------------------------------------------------------------------------");
+						detailedReport.println();
 					}
 					detailedReport.close();
 				}
 				catch(IOException e){
 					System.out.println(e);
 				}
+				System.out.println("Simulation completed. Please took at output file for simulation results.");
 			}	
+			if(option1.equals("P")) {
+				
+			}
 		}
 	}
 }
