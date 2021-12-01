@@ -538,8 +538,9 @@ class AppClient {
 							}
 						}
 						System.out.println(numSmartApps);
+						detailedReport.println("The smart appliances affected at time step " + timeStepCounter + " are:");
 						while(sumWattages(appsByArea)>allowedWattage && numSmartApps>0) {//smart appliance algorithm
-							detailedReport.println("The smart appliances affected at time step " + timeStepCounter + " are:");
+							
 							int rowNumSmart = 0;
 							int columnNumSmart = 0;
 							boolean smartRemaining = true;
@@ -555,11 +556,10 @@ class AppClient {
 							}
 							--numSmartApps;
 							appsByArea.get(rowNumSmart).get(columnNumSmart).setPowerMode(1);
-							detailedReport.println("Location: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppLocation() + "Appliance: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppName());
+							detailedReport.println("Location: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppLocation() + "  ;  Appliance: " + appsByArea.get(rowNumSmart).get(columnNumSmart).getAppName());
 							++appliancesSetToLow;
 							
 						}
-						System.out.println("out of smart algorith");
 						if (sumWattages(appsByArea)>allowedWattage) {//if total wattages are still greater than allowed after using on-low algorithm, use brown-out algorithm
 							while(sumWattages(appsByArea)>allowedWattage) {//insert brown-out algorithm and increase locationsBrownedOut counter
 								int maxPowerRow = 0;
@@ -567,7 +567,6 @@ class AppClient {
 								int currentRowPower = 0;
 								for(int i=0;i<appsByArea.size();++i){//find the row/area that has the highest watt consumption
 									currentRowPower = 0;
-									System.out.println(numSteps);
 									for(int j=0;j<appsByArea.get(i).size();++j) {
 										if(appsByArea.get(i).get(j).getPowerMode()==2) {
 											
