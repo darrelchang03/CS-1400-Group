@@ -610,7 +610,7 @@ class AppClient {
 				}
 			}
 			if (option1.equals("Q")) {
-				System.out.println("Program has ended.");
+				System.out.println("Power simulation program has ended.");
 				System.exit(0);
 			}
 		}
